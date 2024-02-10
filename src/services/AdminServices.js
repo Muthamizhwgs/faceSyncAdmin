@@ -1,7 +1,7 @@
 import useAxiosInterceptors from "../interceptors/axios";
 
 
-export const Login = async (data) => {
+export const LoginUsers = async (data) => {
     let ApiResponse = await useAxiosInterceptors.post("admin/login", data);
     return ApiResponse;
 };
