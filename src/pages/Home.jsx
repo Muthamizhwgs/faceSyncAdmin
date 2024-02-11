@@ -1,42 +1,43 @@
-import React, { useEffect, useState } from 'react'
-import logo from '../assets/facesynclogo.png'
+import React, { useEffect, useState } from "react";
+import logo from "../assets/facesynclogo.png";
+import ManageEvents from "./manageEvents";
+import { Link } from 'react-router-dom';
+import SuperAdmin from "../components/sidebar/superAdmin";
+import Admin from "../components/sidebar/Admin";
+import Photographer from "../components/sidebar/Photographer";
+import ManageAdmin from "./manageAdmin";
+import { Event } from "./event";
+import "../App.css"
 
 const Home = () => {
+    const [roleLoggedIn, setRoleLoggedIn] = useState("");
+    const [reload, setreload] = useState(false);
 
-    const [ roleLoggedIn, setRoleLoggedIn] = useState('');
-    useEffect(()=> {
-        // localStorage.setItem("facesyncrole", 1)
+    useEffect(() => {
         setRoleLoggedIn(localStorage.getItem("facesyncrole"));
-        console.log(localStorage.getItem('facesyncrole'))
+    }, [reload]);
 
-    })
-
-    const superAdminSidebar = [
-        {title: 'admin'},
-        {title: 'photographer'}
-    ]
-
-    const adminsideBar = [
-        {title: 'photographer'}
-    ]
-
-    const photographer = [
-        {title: 'summa'}
-    ]
 
     return (
         <>
-            <section className='flex flex-row'>
-                <section className='bg-black w-[15%] h-[100vh]'>
+            <div>
+                <div className="side">
+                    {
+                        roleLoggedIn == 'superAdmin' ? <SuperAdmin /> : roleLoggedIn == 'admin' ? <Admin /> : <Photographer />
+                    }
+                </div>
 
-                </section>
-                <section className={'w-[85%] h-[100vh]'`${roleLoggedIn==1 ? 'bg-green-500' :null}`}>
+                <div className="main">
+                    {
+                        roleLoggedIn == 'superAdmin' ? <ManageAdmin /> : roleLoggedIn == 'admin' ? <ManageEvents /> : <Event />
+                    }
+                </div>
 
+            </div>
 
-                </section>
-            </section>
         </>
-    )
-}
+    );
+};
 
-export default Home
+export default Home;
+

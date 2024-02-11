@@ -3,9 +3,11 @@ import EventImg from "../assets/event.jpg";
 import { LoginInitValue, LoginSchema } from "../Validation/LoginValidation";
 import { useFormik } from "formik";
 import { LoginUsers } from "../services/AdminServices"
+import { useNavigate } from "react-router-dom";
+import Home from "./Home";
 
 function Login() {
-
+    const navigate = useNavigate();
     const forms = useFormik({
         initialValues: LoginInitValue,
         validationSchema: LoginSchema,
@@ -17,7 +19,9 @@ function Login() {
     const submitForms = async (values) => {
         try {
             let val = await LoginUsers(values)
-            console.log(val.data)
+            localStorage.setItem('facesyncrole', val.data.data.role)
+            localStorage.setItem('facesynctoken', val.data.token.access.token)
+            navigate('/home')
         } catch (error) {
 
         }
