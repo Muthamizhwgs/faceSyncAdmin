@@ -6,6 +6,7 @@ import ManageEvents from "./pages/Admin/manageEvents";
 import ManageAdmin from "./pages/manageAdmin";
 import { Event } from "./pages/event";
 import ManagePhotographer from "./pages/Admin/ManagePhotographer";
+import Myevents from './pages/photographer/MyEvents'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/home/event" Component={Event} />
           <Route path="/home/manage-photographer" Component={ManagePhotographer} />
           <Route path="/home/manage-admin" Component={ManageAdmin} />
+          <Route path="/home/manageMyevents" Component={Myevents} />
         </Route>
       </Routes>
     </>
