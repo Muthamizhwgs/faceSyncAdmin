@@ -5,7 +5,7 @@ import { Link, Outlet } from "react-router-dom";
 import SuperAdmin from "../components/sidebar/superAdmin";
 import Admin from "../components/sidebar/Admin";
 import Photographer from "../components/sidebar/Photographer";
-import ManageAdmin from "./manageAdmin";
+import ManageAdmin from "./supeAdmin/manageAdmin";
 import { Event } from "./event";
 import "../App.css";
 import NavBar from "../components/Navbar/NavBar";
