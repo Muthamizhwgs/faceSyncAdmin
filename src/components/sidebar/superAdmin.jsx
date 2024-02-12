@@ -12,7 +12,7 @@ const SuperAdmin = () => {
       <SidebarHeader />
       <div className="border-t border-gray-500">
         <ul className="flex flex-col gap-3 p-5">
-          <Link to={"/home/manageAdmin"}>
+          <Link to={"/home/manage-admin"}>
             {" "}
             <li
               className={`${location.pathname == "/home/manage-admin"
@@ -35,6 +35,19 @@ const SuperAdmin = () => {
             >
               <img src={pg} className="w-4 h-4" />
               Manage Photographer{" "}
+            </li>
+          </Link>
+          <Link to={"/home/manageMyevents"}>
+            {" "}
+            <li
+              className={`${location.pathname == "/home/manageMyevents"
+                  ? "bg-second"
+                  : ""
+                } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium
+            hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
+            >
+              <FaUser />
+              My Events
             </li>
           </Link>
         </ul>

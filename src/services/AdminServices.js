@@ -47,5 +47,11 @@ export const createAdminBySuperAdmin = async (data) => {
 
 export const assignPhotographer = async (data) => {
     const ApiResponse = await useAxiosInterceptors.post("admin/event/assign", data);
+export const getAdmins =async ()=>{
+    const ApiResponse = await useAxiosInterceptors.get("admin/get/admins")
+    return ApiResponse
+}
+export const AdminDeleteBySuperAdmin =async (_id)=>{
+    const ApiResponse = await useAxiosInterceptors.put(`admin/update/Photographer/${_id}`,{active:false})
     return ApiResponse
 }

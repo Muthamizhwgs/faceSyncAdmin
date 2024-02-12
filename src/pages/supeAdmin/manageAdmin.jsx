@@ -3,15 +3,18 @@ import { Modal, message } from 'antd';
 import DataTable from 'react-data-table-component';
 import { useFormik } from 'formik';
 import { ManageAdminSchema,ManageAdminInitValue } from '../../Validation/manageAdmin.Validation';
-import { getAdmin } from '../../services/AdminServices';
+import { getAdmins, createAdmin,AdminDeleteBySuperAdmin } from '../../services/AdminServices';
 import { useNavigate } from 'react-router-dom/dist';
 import Loader from '../../utils/loadder';
-import { createAdminBySuperAdmin } from '../../services/AdminServices';
+import { MdDelete } from 'react-icons/md';
+import { FaEdit } from 'react-icons/fa';
+
 function ManageAdminBySuperAdmin() {
   let navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loader, setLoader] = useState(false);
   const [manageAdmin, setManageAdmin] = useState(false);
+  const [datas,setdatas]=useState(false)
 
 
 
@@ -25,28 +28,18 @@ function ManageAdminBySuperAdmin() {
     initialValues: ManageAdminInitValue,
     validationSchema: ManageAdminSchema,
     onSubmit: (values) => {
-      console.log(values)
       submitForms(values);
     },
   });
 
   const submitForms = async (values) => {
+    console.log(values)
     setLoader(true)
     try {
-      let data = await createAdminBySuperAdmin(values)
-      console.log(data.data)
-      getAdmin()
-      handleCancel()
+      let val = await createAdmins(values)
+      console.log(val)
     } catch (error) {
-      if (error.response.status == 401) {
-        navigate('/')
-      }
-      messageApi.open({
-        type: 'error',
-        content: error.response.data.message,
-      });
-    } finally {
-      setLoader(false)
+      console.log(error)
     }
   }
 
@@ -54,23 +47,41 @@ function ManageAdminBySuperAdmin() {
     setIsModalOpen(false);
     forms.resetForm()
   };
+  const handleCancel2 = () => {
+    setrowopen(false);
+    forms.resetForm()
+  };
 
-  const createAdmin = async () => {
+  const createAdmins = async (val) => {
     setLoader(true)
     try {
-      let data = await createAdmin()
-      setManageAdmin(data.data)
+      let data = await createAdmin(val)
+      handleCancel();
     } catch (error) {
       if (error.response.status == 401) {
         navigate('/')
       }
-
     } finally {
       setLoader(false)
     }
   }
+
+const getAdminData = async ()=>{
+  setLoader(true)
+  try {
+    let datas = await getAdmins()
+    setdatas(datas.data)
+  } catch (error) {
+    if (error.response.status == 401) {
+      navigate('/')
+    }
+  }finally{
+    setLoader(false)
+  }
+}
+
   useEffect(() => {
-    getAdmin()
+    getAdminData()
   }, [])
 
 
@@ -123,7 +134,44 @@ function ManageAdminBySuperAdmin() {
       ),
       selector: (row) => row.address,
     },
+    {
+      name:(<div>
+         Action
+      </div>),
+      cell: (row) =>(<div className='flex flex-row'><MdDelete className='w-10 h-6' onClick={()=>handleDelete(row._id)} />
+      <FaEdit className='w-8 h-5 ' onClick={()=>handleUpdate(row)} />
+      </div>)
+    }
   ]
+
+const[rowOpen,setrowopen]=useState(false)
+const[rowdata,setrowdata]=useState()
+
+async function handleUpdate(row){
+ await setrowdata(row)
+ console.log(rowdata)
+ setrowopen(true)
+}
+
+
+
+
+
+async function handleDelete(id){
+try{
+setLoader(true)
+ let deletevalue= await AdminDeleteBySuperAdmin(id)
+ console.log(deletevalue)
+
+}
+catch(error){
+ console.log(error)
+}
+finally{
+setLoader(false)
+}
+}
+
 
   const customStyles = {
     rows: {
@@ -150,34 +198,55 @@ function ManageAdminBySuperAdmin() {
       },
     },
   };
+  function handleChange(e){
+    
+    setrowdata((prev)=>({...prev,[e.target.value]:e.target.value}))
+    
+  }
   return (
     <div>
         {loader ? <Loader data={loader} /> : null}
         <div className='w-full h-20 flex sm:flex-row flex-col justify-between items-baseline'>
           <input type="text" placeholder='Search' className='h-9 bg-gray-200 p-4 rounded-md' />
-          <button onClick={showModal} className='w-40 bg-slate-600 rounded-md text-white h-9 b'  > + Add Admin</button>
+          <button onClick={showModal} className='w-40 bg-slate-600 rounded-md text-white h-9 b'  > + Add Organizer</button>
         </div>
-        <Modal title="Create New Events"   open={isModalOpen} onCancel={handleCancel} footer={false}>
-          <div className='w-[90%] m-auto mt-10 flex flex-col items-center'>
-            <input type="text" placeholder='Admin Name' className={`${forms.errors.Name && forms.touched.Name ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='name' id='name' onBlur={forms.handleBlur} value={forms.values.name} onChange={forms.handleChange} />
-            <input type="text" placeholder='Admin Role' className={`${forms.errors.role && forms.touched.role ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='role' id='role' onBlur={forms.handleBlur} value={forms.values.role} onChange={forms.handleChange} />
-            <input type="number" placeholder='Admin Contact' className={`${forms.errors.contact && forms.touched.contact ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='contact' id='contact' onBlur={forms.handleBlur} value={forms.values.contact} onChange={forms.handleChange} />
-            <input type="text" placeholder='Admin email' className={`${forms.errors.email && forms.touched.email ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='email' id='email' onBlur={forms.handleBlur} value={forms.values.email} onChange={forms.handleChange} />
-            <input type="text" placeholder='Admin Address' className={`${forms.errors.address && forms.touched.address ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='address' id='addresss' onBlur={forms.handleBlur} value={forms.values.address} onChange={forms.handleChange} />
+        <Modal title="Add Event Organizer"   open={isModalOpen} onCancel={handleCancel} footer={false}>
+         <div className='w-[90%] m-auto mt-10 flex flex-col items-center'>
+            <input type="text" placeholder='Organizer Name' className={`${forms.errors.userName && forms.touched.userName ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='userName' id='userName' onBlur={forms.handleBlur} value={forms.values.userName} onChange={forms.handleChange} />
+            <input type="text" placeholder='Organizer email' className={`${forms.errors.email && forms.touched.email ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='email' id='email' onBlur={forms.handleBlur} value={forms.values.email} onChange={forms.handleChange} />
+            <input type="text" placeholder='Company Name (optional)' className={`${forms.errors.companyName && forms.touched.companyName ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='companyName' id='companyName' onBlur={forms.handleBlur} value={forms.values.companyName} onChange={forms.handleChange} />
+            <input type="number" placeholder='Organizer Contact' className={`${forms.errors.contact && forms.touched.contact ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='contact' id='contact' onBlur={forms.handleBlur} value={forms.values.contact} onChange={forms.handleChange} />
+            <input type="text" placeholder='Organizer Address' className={`${forms.errors.address && forms.touched.address ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='address' id='addresss' onBlur={forms.handleBlur} value={forms.values.address} onChange={forms.handleChange} />
           </div>
           <div className='flex justify-center'>
-            <button type='submit' onClick={forms.handleSubmit} className='w-28 bg-slate-600 rounded-md text-white h-9 b'>Submit</button>
+            <button  type='submit' onClick={forms.handleSubmit} className='w-28 bg-slate-600 rounded-md text-white h-9 b'>Submit</button>
           </div>
         </Modal>
 
-  <DataTable
+
+
+        <Modal title="Add Event Organizer"   open={rowOpen} onCancel={handleCancel2} footer={false}>
+         <div className='w-[90%] m-auto mt-10 flex flex-col items-center'>
+            <input type="text" placeholder='Organizer Name' className={`${forms.errors.userName && forms.touched.userName ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='userName' id='userName' onBlur={forms.handleBlur} value={rowdata.userName} onChange={handleChange} />
+            <input type="text" placeholder='Organizer email' className={`${forms.errors.email && forms.touched.email ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='email' id='email' onBlur={forms.handleBlur} value={rowdata.email} onChange={forms.handleChange} />
+            <input type="text" placeholder='Company Name (optional)' className={`${forms.errors.companyName && forms.touched.companyName ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='companyName' id='companyName' onBlur={forms.handleBlur} value={forms.values.companyName} onChange={handleChange} />
+            <input type="number" placeholder='Organizer Contact' className={`${forms.errors.contact && forms.touched.contact ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='contact' id='contact' onBlur={forms.handleBlur} value={rowdata.contact} onChange={handleChange} />
+            <input type="text" placeholder='Organizer Address' className={`${forms.errors.address && forms.touched.address ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='address' id='addresss' onBlur={forms.handleBlur} value={rowdata.address} onChange={handleChange} />
+          </div>
+          <div className='flex justify-center'>
+            <button  type='submit' onClick={forms.handleSubmit} className='w-28 bg-slate-600 rounded-md text-white h-9 b'>Submit</button>
+          </div>
+        </Modal>
+
+  {datas && <DataTable
   customStyles={customStyles}
   columns={columns}
   fixedHeader
   pagination
+  data={datas}
   bordered
   />
-
+}
     </div>
   )
 }
