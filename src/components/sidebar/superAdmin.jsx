@@ -5,6 +5,7 @@ import { FaUser } from "react-icons/fa";
 import pg from "../../assets/pg.png";
 
 const SuperAdmin = () => {
+  let location = useLocation()
   return (
     <div className="w-full h-[100vh] bg-first">
       <SidebarHeader />
