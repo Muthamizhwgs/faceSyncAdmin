@@ -22,7 +22,7 @@ const Home = () => {
   return (
     <>
       <div>
-        <div className="lg:flex flex-col w-1/5  h-screen  hidden md:fixed left-0 top-0 bg-primary overflow-y-scroll">
+        <div className="lg:flex flex-col w-1/5  h-screen  hidden md:fixed left-0 top-0 bg-primary ">
           {roleLoggedIn == "superAdmin" ? (
             <SuperAdmin />
           ) : roleLoggedIn == "admin" ? (
@@ -33,9 +33,13 @@ const Home = () => {
         </div>
 
         <div
-          className="w-full lg:w-4/5  h-16 flex flex-row justify-between px-4 fixed left-1/5 right-0 top-0
+          className="w-full lg:w-4/5  h-16 flex flex-row justify-end px-4 fixed left-1/5 right-0 top-0
       bg-fourth  z-20 border-b border-stone-200"
-        ></div>
+        >
+            <div>
+                
+            </div>
+        </div>
 
         {/* <div className="main">
           {roleLoggedIn == "superAdmin" ? (

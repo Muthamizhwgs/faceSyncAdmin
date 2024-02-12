@@ -1,11 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import SidebarHeader from "./SidebarHeader";
 import { FaUser } from "react-icons/fa";
 import pg from "../../assets/pg.png";
 
 const SuperAdmin = () => {
   let location = useLocation()
+
   return (
     <div className="w-full h-[100vh] bg-first">
       <SidebarHeader />

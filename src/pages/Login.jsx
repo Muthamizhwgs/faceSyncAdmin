@@ -23,7 +23,15 @@ function Login() {
             let val = await LoginUsers(values)
             localStorage.setItem('facesyncrole', val.data.data.role)
             localStorage.setItem('facesynctoken', val.data.token.access.token)
-            navigate('/home')
+
+            if(val.data.data.role === "superAdmin"){
+                navigate('/home/manageAdmin')
+            }else if(val.data.data.role === "admin"){
+                navigate('/home/manageevents')
+            }else if(val.data.data.role === "photographer"){
+                navigate("/home")
+            }
+           
         } catch (error) {
             if (error.response.status == 401) {
                 navigate('/')

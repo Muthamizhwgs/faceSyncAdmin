@@ -1,16 +1,18 @@
 import React from "react";
-import Logo from "../../assets/bird.jpg";
+import pg from "../../assets/pg.png";
 import { Link, useLocation } from "react-router-dom";
 import SidebarHeader from "./SidebarHeader";
+import { FaUser } from "react-icons/fa";
+
 const Admin = () => {
   let location = useLocation();
   return (
-    <div className="w-full h-[100vh] bg-slate-600">
+    <div className="w-full h-[100vh] bg-first">
       <SidebarHeader />
 
       <div className="border-t border-gray-500">
         <ul className="flex flex-col gap-3 p-5">
-          <Link to={"/home/manageAdmin"}>
+          <Link to={"/home/manageevents"}>
             {" "}
             <li
               className={`${
