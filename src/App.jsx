@@ -3,7 +3,7 @@ import Login from "./pages/Login";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import ManageEvents from "./pages/Admin/manageEvents";
-import ManageAdmin from "./pages/manageAdmin";
+import ManageAdmin from "./pages/supeAdmin/manageAdmin";
 import { Event } from "./pages/event";
 import ManagePhotographer from "./pages/Admin/ManagePhotographer";
 
@@ -19,7 +19,6 @@ function App() {
           <Route path="/home/manageAdmin" Component={ManageAdmin} />
           <Route path="/home/event" Component={Event} />
           <Route path="/home/manage-photographer" Component={ManagePhotographer} />
-          <Route path="/home/manage-admin" Component={ManageAdmin} />
         </Route>
       </Routes>
     </>

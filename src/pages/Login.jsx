@@ -23,6 +23,7 @@ function Login() {
             let val = await LoginUsers(values)
             localStorage.setItem('facesyncrole', val.data.data.role)
             localStorage.setItem('facesynctoken', val.data.token.access.token)
+            localStorage.setItem('username', val.data.data.userName)
 
             if(val.data.data.role === "superAdmin"){
                 navigate('/home/manageAdmin')
