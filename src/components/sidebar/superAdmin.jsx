@@ -15,7 +15,7 @@ const SuperAdmin = () => {
           <Link to={"/home/manageAdmin"}>
             {" "}
             <li
-              className={`${location.pathname == "/home/manageAdmin"
+              className={`${location.pathname == "/home/manage-admin"
                   ? "bg-second"
                   : ""
                 } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium

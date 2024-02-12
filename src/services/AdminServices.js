@@ -40,3 +40,7 @@ export const getAdmin = async () => {
     const ApiResponse = await useAxiosInterceptors.put("admin/get/manageAdmin/")
     return ApiResponse
 }
+export const createAdminBySuperAdmin = async (data) => {
+    const ApiResponse = await useAxiosInterceptors.post("admin/create/adminby/SuperAdmin", data);
+    return ApiResponse
+}

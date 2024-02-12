@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, message } from 'antd';
-import DataTable from 'react-data-table-component';
+import { ManageAdminInitValue, ManageAdminSchema } from "../../Validation/managePhotographer"
 import { useFormik } from 'formik';
-import { ManageAdminSchema,ManageAdminInitValue } from '../../Validation/manageAdmin.Validation';
 import { getAdmin } from '../../services/AdminServices';
-import { useNavigate } from 'react-router-dom/dist';
+import { useNavigate } from 'react-router-dom';
 import Loader from '../../utils/loadder';
-import { createAdminBySuperAdmin } from '../../services/AdminServices';
-function ManageAdminBySuperAdmin() {
+import DataTable from 'react-data-table-component';
+
+const ManageAdmin = () => {
   let navigate = useNavigate()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loader, setLoader] = useState(false);
   const [manageAdmin, setManageAdmin] = useState(false);
 
@@ -33,7 +33,7 @@ function ManageAdminBySuperAdmin() {
   const submitForms = async (values) => {
     setLoader(true)
     try {
-      let data = await createAdminBySuperAdmin(values)
+      let data = await createAdmin(values)
       console.log(data.data)
       getAdmin()
       handleCancel()
@@ -150,15 +150,21 @@ function ManageAdminBySuperAdmin() {
       },
     },
   };
+
   return (
-    <div>
-        {loader ? <Loader data={loader} /> : null}
+    <>
+      {loader ? <Loader data={loader} /> : null}
+      {contextHolder}
+      <div className='w-full mx-auto p-5'>
         <div className='w-full h-20 flex sm:flex-row flex-col justify-between items-baseline'>
           <input type="text" placeholder='Search' className='h-9 bg-gray-200 p-4 rounded-md' />
-          <button onClick={showModal} className='w-40 bg-slate-600 rounded-md text-white h-9 b'  > + Add Admin</button>
+          <button className='w-40 bg-slate-600 rounded-md text-white h-9 b' onClick={showModal}> + Add Admin</button>
         </div>
-        <Modal title="Create New Events"   open={isModalOpen} onCancel={handleCancel} footer={false}>
-          <div className='w-[90%] m-auto mt-10 flex flex-col items-center'>
+
+        {/* models */}
+
+        <Modal title="Create New Events" open={isModalOpen} onCancel={handleCancel} footer={false}>
+          <div className='w-[90%] m-auto mt-5 flex flex-col items-center'>
             <input type="text" placeholder='Admin Name' className={`${forms.errors.Name && forms.touched.Name ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='name' id='name' onBlur={forms.handleBlur} value={forms.values.name} onChange={forms.handleChange} />
             <input type="text" placeholder='Admin Role' className={`${forms.errors.role && forms.touched.role ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='role' id='role' onBlur={forms.handleBlur} value={forms.values.role} onChange={forms.handleChange} />
             <input type="number" placeholder='Admin Contact' className={`${forms.errors.contact && forms.touched.contact ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='contact' id='contact' onBlur={forms.handleBlur} value={forms.values.contact} onChange={forms.handleChange} />
@@ -170,16 +176,20 @@ function ManageAdminBySuperAdmin() {
           </div>
         </Modal>
 
-  <DataTable
-  customStyles={customStyles}
-  columns={columns}
-  fixedHeader
-  pagination
-  bordered
-  />
+        {manageAdmin && <div className='w-full overflow-auto'>
+          <DataTable
+            columns={columns}
+            data={manageAdmin}
+            fixedHeader
+            pagination
+            bordered
+            customStyles={customStyles}
+          />
+        </div>}
 
-    </div>
+      </div>
+    </>
   )
 }
 
-export default ManageAdminBySuperAdmin;
+export default ManageAdmin
