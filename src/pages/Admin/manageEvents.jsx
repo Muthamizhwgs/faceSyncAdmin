@@ -14,7 +14,7 @@ import DateFormat from '../../utils/dateFormat';
 function ManageEvents() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [evets,setEvents] = useState([])
+  const [evets, setEvents] = useState([])
 
 
   const showModal = () => {
@@ -29,11 +29,11 @@ function ManageEvents() {
     },
   });
 
-    const handleCancel = () => {
-      setIsModalOpen(false);
-      forms.resetForm()
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    forms.resetForm()
 
-    };
+  };
 
   const submitForms = async (values) => {
     setLoader(true)
@@ -48,21 +48,21 @@ function ManageEvents() {
     }
   }
 
-  const MyEvents = async ()=>{
+  const MyEvents = async () => {
     try {
       setLoader(true)
       let values = await getEvents()
       console.log(values)
       setEvents(values.data)
     } catch (error) {
-    }finally{
+    } finally {
       setLoader(false)
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     MyEvents()
-  },[])
+  }, [])
 
   return (
     <>
@@ -90,25 +90,25 @@ function ManageEvents() {
 
         <div className='flex gap-5'>
           {
-            evets && evets.map((data,ind)=>(
-              <div className='basis-[32%] h-32 bg-blue-200 rounded-md'>
-              <div className='w-[95%] m-auto flex justify-between overflow-auto'>
-                <h1 className='mt-2'>{data.eventName}</h1>
-                <button><FaEdit size={20} /></button>
+            evets && evets.map((data, ind) => (
+              <div className='basis-[32%] h-32 bg-blue-200 rounded-md' key={ind}>
+                <div className='w-[95%] m-auto flex justify-between overflow-auto'>
+                  <h1 className='mt-2'>{data.eventName}</h1>
+                  <button><FaEdit size={20}/></button>
+                </div>
+                <div className='w-[95%] m-auto flex justify-between'>
+                  <h1 className='mt-2 flex items-center'><IoLocationOutline size={20} />{data.eventLocation}</h1>
+                  <h1 className='mt-2 flex items-center'><MdOutlineDateRange size={20} /><DateFormat data={data.eventDate} /></h1>
+                </div>
+                <div className='w-[95%] m-auto flex justify-between'>
+                  <h1 className='mt-2 flex items-center'><MdOutlineDescription size={20} />{data.eventSummary}</h1>
+                </div>
               </div>
-              <div className='w-[95%] m-auto flex justify-between'>
-                <h1 className='mt-2 flex items-center'><IoLocationOutline size={20} />{data.eventLocation}</h1>
-                <h1 className='mt-2 flex items-center'><MdOutlineDateRange size={20} /><DateFormat data={data.eventDate}/></h1>
-              </div>
-              <div className='w-[95%] m-auto flex justify-between'>
-                <h1 className='mt-2 flex items-center'><MdOutlineDescription size={20} />{data.eventSummary}</h1>
-              </div>
-            </div>
-        
+
             ))
           }
 
-          </div>
+        </div>
       </div>
     </>
   )

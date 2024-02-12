@@ -1,6 +1,10 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react'
+import Logo from '../../assets/facesynclogo.png';
+import { Link, useLocation } from 'react-router-dom'
 
 const SuperAdmin = () => {
+  let location = useLocation()
   return (
     <div className='w-full h-[100vh] bg-slate-600'>
     <div className=' pt-6'>
