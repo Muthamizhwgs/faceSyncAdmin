@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import logo from "../assets/facesynclogo.png";
-import ManageEvents from "./manageEvents";
+import ManageEvents from "./Admin/manageEvents";
 import { Link } from 'react-router-dom';
 import SuperAdmin from "../components/sidebar/superAdmin";
 import Admin from "../components/sidebar/Admin";

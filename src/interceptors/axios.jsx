@@ -7,7 +7,7 @@ const apiInstance = axios.create({
 // Request interceptor
 apiInstance.interceptors.request.use(
   (config) => {
-    const authToken = localStorage.getItem("facesync");
+    const authToken = localStorage.getItem("facesynctoken");
     config.headers.Authorization = `Bearer ${authToken}`;
     return config;
   },
