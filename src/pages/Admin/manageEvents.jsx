@@ -11,6 +11,7 @@ import Loader from '../../utils/loadder';
 import { createEvents, getEvents, EditeEvent } from '../../services/AdminServices';
 import DateFormat from '../../utils/dateFormat';
 
+
 function ManageEvents() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -59,8 +60,7 @@ function ManageEvents() {
 
   const handleCancel = () => {
     setIsModalOpen(false);
-    forms.resetForm()
-
+    forms.resetForm({values:ManageEventsInitValue})
   };
 
   const submitForms = async (values) => {

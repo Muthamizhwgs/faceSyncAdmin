@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import ManageEvents from "./pages/Admin/manageEvents";
 import ManageAdmin from "./pages/supeAdmin/manageAdmin";
+import ManageAdmin from "./pages/supeAdmin/manageAdmin";
 import { Event } from "./pages/event";
 import ManagePhotographer from "./pages/Admin/ManagePhotographer";
 import New from "./pages/photogar/New";
