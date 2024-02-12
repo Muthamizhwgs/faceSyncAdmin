@@ -15,11 +15,10 @@ const SuperAdmin = () => {
           <Link to={"/home/manageAdmin"}>
             {" "}
             <li
-              className={`${
-                location.pathname == "/home/manageAdmin"
+              className={`${location.pathname == "/home/manageAdmin"
                   ? "bg-second"
                   : ""
-              } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium
+                } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium
             hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
             >
               <FaUser />
@@ -28,14 +27,13 @@ const SuperAdmin = () => {
           </Link>
           <Link to={"/home/manage-photographer"}>
             <li
-              className={`${
-                location.pathname == "/home/manage-photographer"
+              className={`${location.pathname == "/home/manage-photographer"
                   ? "bg-second"
                   : ""
-              } flex flex-row items-center gap-2 p-2 text-white text-[14px] font-medium
+                } flex flex-row items-center gap-2 p-2 text-white text-[14px] font-medium
               hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
             >
-              <img src={pg} className="w-4 h-4"/>
+              <img src={pg} className="w-4 h-4" />
               Manage Photographer{" "}
             </li>
           </Link>

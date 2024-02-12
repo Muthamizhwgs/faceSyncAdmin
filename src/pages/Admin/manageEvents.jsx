@@ -8,12 +8,16 @@ import { MdOutlineDescription } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import moment from 'moment';
 import Loader from '../../utils/loadder';
-import { createEvents, getEvents } from '../../services/AdminServices';
+import { createEvents, getEvents, EditeEvent } from '../../services/AdminServices';
 import DateFormat from '../../utils/dateFormat';
 
 function ManageEvents() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [id, setId] = useState('');
+
+
   const [evets, setEvents] = useState([])
 
 
@@ -25,9 +29,33 @@ function ManageEvents() {
     initialValues: ManageEventsInitValue,
     validationSchema: ManageEventsSchema,
     onSubmit: (values) => {
-      submitForms(values);
+      edit ? EditForms(values) : submitForms(values);
     },
   });
+  const handleedit = (data) => {
+    ManageEventsInitValue.eventName = data.eventName;
+    ManageEventsInitValue.eventLocation = data.eventLocation;
+    ManageEventsInitValue.eventDate = data.eventDate;
+    ManageEventsInitValue.eventSummary = data.eventSummary;
+    setId(data._id)
+    setEdit(true)
+    setIsModalOpen(true);
+    console.log(data)
+  }
+  const EditForms = async (values) => {
+    setLoader(true)
+    try {
+      let val = await EditeEvent(id, values);
+      console.log(val)
+      MyEvents()
+      handleCancel()
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoader(false)
+    }
+  }
+
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -43,6 +71,7 @@ function ManageEvents() {
       MyEvents()
       handleCancel()
     } catch (error) {
+
     } finally {
       setLoader(false)
     }
@@ -55,6 +84,7 @@ function ManageEvents() {
       console.log(values)
       setEvents(values.data)
     } catch (error) {
+
     } finally {
       setLoader(false)
     }
@@ -64,13 +94,14 @@ function ManageEvents() {
     MyEvents()
   }, [])
 
+
   return (
     <>
       {loader ? <Loader date={loader} /> : null}
-      <div className='w-[90%] m-auto h-[100vh]'>
-        <div className='w-full h-24 flex justify-between items-baseline'>
-          <input type="text" placeholder='Search Events' className='mt-10 h-9 bg-gray-200 p-4 rounded-md' />
-          <button className='w-28 bg-slate-600 rounded-md text-white h-9 b' onClick={showModal}>Add Events</button>
+      <div className='w-full mx-auto p-5 h-[100vh]'>
+        <div className='w-full h-20 flex justify-between items-baseline'>
+          <input type="text" placeholder='Search Events' className=' h-9 bg-gray-200 p-4 rounded-md' />
+          <button className='w-28 bg-slate-600 rounded-md text-white h-9' onClick={showModal}>Add Events</button>
         </div>
         {/* model */}
 
@@ -88,19 +119,19 @@ function ManageEvents() {
 
         {/* cards */}
 
-        <div className='flex gap-5'>
+        <div className='grid grid-cols-3 gap-5'>
           {
             evets && evets.map((data, ind) => (
               <div className='basis-[32%] h-32 bg-blue-200 rounded-md' key={ind}>
-                <div className='w-[95%] m-auto flex justify-between overflow-auto'>
+                <div className='w-full p-1 mx-auto px-4 flex justify-between overflow-auto'>
                   <h1 className='mt-2'>{data.eventName}</h1>
-                  <button><FaEdit size={20}/></button>
+                  <button><FaEdit size={20} onClick={() => { handleedit(data) }} /></button>
                 </div>
-                <div className='w-[95%] m-auto flex justify-between'>
+                <div className='w-full p-1 px-3 mx-auto flex justify-between'>
                   <h1 className='mt-2 flex items-center'><IoLocationOutline size={20} />{data.eventLocation}</h1>
                   <h1 className='mt-2 flex items-center'><MdOutlineDateRange size={20} /><DateFormat data={data.eventDate} /></h1>
                 </div>
-                <div className='w-[95%] m-auto flex justify-between'>
+                <div className='w-full p-1 mx-auto px-3 flex justify-between'>
                   <h1 className='mt-2 flex items-center'><MdOutlineDescription size={20} />{data.eventSummary}</h1>
                 </div>
               </div>
