@@ -8,6 +8,7 @@ import Photographer from "../components/sidebar/Photographer";
 import ManageAdmin from "./manageAdmin";
 import { Event } from "./event";
 import "../App.css";
+import NavBar from "../components/Navbar/NavBar";
 
 const Home = () => {
   const [roleLoggedIn, setRoleLoggedIn] = useState("");
@@ -32,14 +33,7 @@ const Home = () => {
           )}
         </div>
 
-        <div
-          className="w-full lg:w-4/5  h-16 flex flex-row justify-end px-4 fixed left-1/5 right-0 top-0
-      bg-fourth  z-20 border-b border-stone-200"
-        >
-            <div>
-                
-            </div>
-        </div>
+        <NavBar/>
 
         {/* <div className="main">
           {roleLoggedIn == "superAdmin" ? (

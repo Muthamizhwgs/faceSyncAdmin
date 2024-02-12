@@ -3,7 +3,7 @@ import Logo from "../../assets/logofs.jpg";
 
 const SidebarHeader = () => {
   return (
-    <div className='w-full p-5'>
+    <div className='w-full p-5' >
     <img src={Logo} alt="" className='w-full h-28 m-auto rounded'/>
 </div>
   )
