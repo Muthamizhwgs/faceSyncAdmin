@@ -4,6 +4,7 @@ import DataTable from 'react-data-table-component';
 import { useFormik } from 'formik';
 import { ManageAdminSchema,ManageAdminInitValue } from '../../Validation/manageAdmin.Validation';
 import { getAdmin } from '../../services/AdminServices';
+import { getAdmins } from '../../services/AdminServices';
 import { useNavigate } from 'react-router-dom/dist';
 import Loader from '../../utils/loadder';
 import { createAdminBySuperAdmin } from '../../services/AdminServices';
@@ -12,6 +13,7 @@ function ManageAdminBySuperAdmin() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loader, setLoader] = useState(false);
   const [manageAdmin, setManageAdmin] = useState(false);
+  const [datas,setdatas]=useState([])
 
 
 
@@ -35,6 +37,7 @@ function ManageAdminBySuperAdmin() {
     try {
       let data = await createAdminBySuperAdmin(values)
       console.log(data.data)
+      setdatas(data.data)
       getAdmin()
       handleCancel()
     } catch (error) {
@@ -70,7 +73,7 @@ function ManageAdminBySuperAdmin() {
     }
   }
   useEffect(() => {
-    getAdmin()
+    getAdmins()
   }, [])
 
 
@@ -175,6 +178,7 @@ function ManageAdminBySuperAdmin() {
   columns={columns}
   fixedHeader
   pagination
+  data={datas}
   bordered
   />
 

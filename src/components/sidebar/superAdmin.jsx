@@ -12,7 +12,7 @@ const SuperAdmin = () => {
       <SidebarHeader />
       <div className="border-t border-gray-500">
         <ul className="flex flex-col gap-3 p-5">
-          <Link to={"/home/manageAdmin"}>
+          <Link to={"/home/manage-admin"}>
             {" "}
             <li
               className={`${location.pathname == "/home/manage-admin"
