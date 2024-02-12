@@ -47,6 +47,8 @@ export const createAdminBySuperAdmin = async (data) => {
 
 export const assignPhotographer = async (data) => {
     const ApiResponse = await useAxiosInterceptors.post("admin/event/assign", data);
+    return ApiResponse
+}
 export const getAdmins =async ()=>{
     const ApiResponse = await useAxiosInterceptors.get("admin/get/admins")
     return ApiResponse
