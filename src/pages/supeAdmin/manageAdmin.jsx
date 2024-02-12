@@ -3,16 +3,18 @@ import { Modal, message } from 'antd';
 import DataTable from 'react-data-table-component';
 import { useFormik } from 'formik';
 import { ManageAdminSchema,ManageAdminInitValue } from '../../Validation/manageAdmin.Validation';
-import { getAdmins, createAdmin } from '../../services/AdminServices';
+import { getAdmins, createAdmin,AdminDeleteBySuperAdmin } from '../../services/AdminServices';
 import { useNavigate } from 'react-router-dom/dist';
 import Loader from '../../utils/loadder';
+import { MdDelete } from 'react-icons/md';
+import { FaEdit } from 'react-icons/fa';
 
 function ManageAdminBySuperAdmin() {
   let navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loader, setLoader] = useState(false);
   const [manageAdmin, setManageAdmin] = useState(false);
-  const [datas,setdatas]=useState([])
+  const [datas,setdatas]=useState(false)
 
 
 
@@ -37,12 +39,16 @@ function ManageAdminBySuperAdmin() {
       let val = await createAdmins(values)
       console.log(val)
     } catch (error) {
-      
+      console.log(error)
     }
   }
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    forms.resetForm()
+  };
+  const handleCancel2 = () => {
+    setrowopen(false);
     forms.resetForm()
   };
 
@@ -128,7 +134,44 @@ const getAdminData = async ()=>{
       ),
       selector: (row) => row.address,
     },
+    {
+      name:(<div>
+         Action
+      </div>),
+      cell: (row) =>(<div className='flex flex-row'><MdDelete className='w-10 h-6' onClick={()=>handleDelete(row._id)} />
+      <FaEdit className='w-8 h-5 ' onClick={()=>handleUpdate(row)} />
+      </div>)
+    }
   ]
+
+const[rowOpen,setrowopen]=useState(false)
+const[rowdata,setrowdata]=useState()
+
+async function handleUpdate(row){
+ await setrowdata(row)
+ console.log(rowdata)
+ setrowopen(true)
+}
+
+
+
+
+
+async function handleDelete(id){
+try{
+setLoader(true)
+ let deletevalue= await AdminDeleteBySuperAdmin(id)
+ console.log(deletevalue)
+
+}
+catch(error){
+ console.log(error)
+}
+finally{
+setLoader(false)
+}
+}
+
 
   const customStyles = {
     rows: {
@@ -155,6 +198,11 @@ const getAdminData = async ()=>{
       },
     },
   };
+  function handleChange(e){
+    
+    setrowdata((prev)=>({...prev,[e.target.value]:e.target.value}))
+    
+  }
   return (
     <div>
         {loader ? <Loader data={loader} /> : null}
@@ -169,6 +217,21 @@ const getAdminData = async ()=>{
             <input type="text" placeholder='Company Name (optional)' className={`${forms.errors.companyName && forms.touched.companyName ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='companyName' id='companyName' onBlur={forms.handleBlur} value={forms.values.companyName} onChange={forms.handleChange} />
             <input type="number" placeholder='Organizer Contact' className={`${forms.errors.contact && forms.touched.contact ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='contact' id='contact' onBlur={forms.handleBlur} value={forms.values.contact} onChange={forms.handleChange} />
             <input type="text" placeholder='Organizer Address' className={`${forms.errors.address && forms.touched.address ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='address' id='addresss' onBlur={forms.handleBlur} value={forms.values.address} onChange={forms.handleChange} />
+          </div>
+          <div className='flex justify-center'>
+            <button  type='submit' onClick={forms.handleSubmit} className='w-28 bg-slate-600 rounded-md text-white h-9 b'>Submit</button>
+          </div>
+        </Modal>
+
+
+
+        <Modal title="Add Event Organizer"   open={rowOpen} onCancel={handleCancel2} footer={false}>
+         <div className='w-[90%] m-auto mt-10 flex flex-col items-center'>
+            <input type="text" placeholder='Organizer Name' className={`${forms.errors.userName && forms.touched.userName ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='userName' id='userName' onBlur={forms.handleBlur} value={rowdata.userName} onChange={handleChange} />
+            <input type="text" placeholder='Organizer email' className={`${forms.errors.email && forms.touched.email ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='email' id='email' onBlur={forms.handleBlur} value={rowdata.email} onChange={forms.handleChange} />
+            <input type="text" placeholder='Company Name (optional)' className={`${forms.errors.companyName && forms.touched.companyName ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='companyName' id='companyName' onBlur={forms.handleBlur} value={forms.values.companyName} onChange={handleChange} />
+            <input type="number" placeholder='Organizer Contact' className={`${forms.errors.contact && forms.touched.contact ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='contact' id='contact' onBlur={forms.handleBlur} value={rowdata.contact} onChange={handleChange} />
+            <input type="text" placeholder='Organizer Address' className={`${forms.errors.address && forms.touched.address ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='address' id='addresss' onBlur={forms.handleBlur} value={rowdata.address} onChange={handleChange} />
           </div>
           <div className='flex justify-center'>
             <button  type='submit' onClick={forms.handleSubmit} className='w-28 bg-slate-600 rounded-md text-white h-9 b'>Submit</button>
