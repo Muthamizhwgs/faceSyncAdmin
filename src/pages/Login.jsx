@@ -26,7 +26,7 @@ function Login() {
 
             if(val.data.data.role === "superAdmin"){
                 navigate('/home/manageAdmin')
-            }else if(val.data.data.role === "admin"){
+            } else if (val.data.data.role === "admin"){
                 navigate('/home/manageevents')
             }else if(val.data.data.role === "photographer"){
                 navigate("/home")
