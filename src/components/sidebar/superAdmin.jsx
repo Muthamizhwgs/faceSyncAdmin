@@ -37,6 +37,19 @@ const SuperAdmin = () => {
               Manage Photographer{" "}
             </li>
           </Link>
+          <Link to={"/home/manageMyevents"}>
+            {" "}
+            <li
+              className={`${location.pathname == "/home/manageMyevents"
+                  ? "bg-second"
+                  : ""
+                } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium
+            hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
+            >
+              <FaUser />
+              My Events
+            </li>
+          </Link>
         </ul>
       </div>
     </div>
