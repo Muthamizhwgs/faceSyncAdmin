@@ -29,7 +29,7 @@ export const getPhotoGrapher = async () => {
 }
 
 export const EditeEvent = async (id, data) => {
-    const ApiResponse = await useAxiosInterceptors.put("admin//updateEvents/" + id, data)
+    const ApiResponse = await useAxiosInterceptors.put("admin/updateEvents/" + id, data)
     return ApiResponse
 }
 export const createAdmin = async (data) => {
@@ -42,5 +42,10 @@ export const getAdmin = async () => {
 }
 export const createAdminBySuperAdmin = async (data) => {
     const ApiResponse = await useAxiosInterceptors.post("admin/create/adminby/SuperAdmin", data);
+    return ApiResponse
+}
+
+export const assignPhotographer = async (data) => {
+    const ApiResponse = await useAxiosInterceptors.post("admin/event/assign", data);
     return ApiResponse
 }

@@ -8,6 +8,11 @@ export const ManageEventsSchema = Yup.object({
     eventSummary: Yup.string()
 })
 
+export const ManageEventsSchema2 = Yup.object({
+    photographerId: Yup.string().required("Enter the Name"), 
+    eventId: Yup.string()
+})
+
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const ManageEventsInitValue = {
@@ -15,4 +20,9 @@ export const ManageEventsInitValue = {
     eventLocation: "",
     eventDate: "",
     eventSummary:""
+}
+
+export const ManageAssignPhotographers = {
+    photographerId:"",
+    eventId:""
 }
