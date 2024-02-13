@@ -12,10 +12,10 @@ const SuperAdmin = () => {
       <SidebarHeader />
       <div className="border-t border-gray-500">
         <ul className="flex flex-col gap-3 p-5">
-          <Link to={"/home/manage-admin"}>
+          <Link to={"/home/manageAdmin"}>
             {" "}
             <li
-              className={`${location.pathname == "/home/manage-admin"
+              className={`${location.pathname == "/home/manageAdmin"
                   ? "bg-second"
                   : ""
                 } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium
