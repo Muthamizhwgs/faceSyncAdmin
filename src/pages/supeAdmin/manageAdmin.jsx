@@ -3,7 +3,7 @@ import { Modal, message } from 'antd';
 import DataTable from 'react-data-table-component';
 import { useFormik } from 'formik';
 import { ManageAdminSchema,ManageAdminInitValue } from '../../Validation/manageAdmin.Validation';
-import { getAdmins, createAdmin,AdminDeleteBySuperAdmin } from '../../services/AdminServices';
+import { getAdmins, createAdmin,AdminDeleteBySuperAdmin, EditeEvent } from '../../services/AdminServices';
 import { useNavigate } from 'react-router-dom/dist';
 import Loader from '../../utils/loadder';
 import { MdDelete } from 'react-icons/md';
@@ -23,14 +23,25 @@ function ManageAdminBySuperAdmin() {
   const showModal = () => {
     setIsModalOpen(true);
   };
-
+const [editmode,seteditmode]=useState(false)
   const forms = useFormik({
     initialValues: ManageAdminInitValue,
     validationSchema: ManageAdminSchema,
     onSubmit: (values) => {
-      submitForms(values);
+     submitForms(values) 
     },
   });
+
+async function edit(id){
+  try{
+  let value=await EditeEvent(id,rowdata)
+  console.log(value)
+  // getAdmins()
+  }
+  catch(error){
+     console.log(error)
+  }
+}
 
   const submitForms = async (values) => {
     console.log(values)
@@ -50,6 +61,7 @@ function ManageAdminBySuperAdmin() {
   const handleCancel2 = () => {
     setrowopen(false);
     forms.resetForm()
+    seteditmode(false)
   };
 
   const createAdmins = async (val) => {
@@ -145,12 +157,13 @@ const getAdminData = async ()=>{
   ]
 
 const[rowOpen,setrowopen]=useState(false)
-const[rowdata,setrowdata]=useState()
+const[rowdata,setrowdata]=useState(false)
 
 async function handleUpdate(row){
  await setrowdata(row)
  console.log(rowdata)
  setrowopen(true)
+
 }
 
 
@@ -200,8 +213,8 @@ setLoader(false)
   };
   function handleChange(e){
     
-    setrowdata((prev)=>({...prev,[e.target.value]:e.target.value}))
-    
+    setrowdata((prev)=>({...prev,[e.target.name]:e.target.value}))
+    seteditmode(true)
   }
   return (
     <div>
@@ -228,13 +241,13 @@ setLoader(false)
         <Modal title="Add Event Organizer"   open={rowOpen} onCancel={handleCancel2} footer={false}>
          <div className='w-[90%] m-auto mt-10 flex flex-col items-center'>
             <input type="text" placeholder='Organizer Name' className={`${forms.errors.userName && forms.touched.userName ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='userName' id='userName' onBlur={forms.handleBlur} value={rowdata.userName} onChange={handleChange} />
-            <input type="text" placeholder='Organizer email' className={`${forms.errors.email && forms.touched.email ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='email' id='email' onBlur={forms.handleBlur} value={rowdata.email} onChange={forms.handleChange} />
-            <input type="text" placeholder='Company Name (optional)' className={`${forms.errors.companyName && forms.touched.companyName ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='companyName' id='companyName' onBlur={forms.handleBlur} value={forms.values.companyName} onChange={handleChange} />
+            <input type="text" placeholder='Organizer email' className={`${forms.errors.email && forms.touched.email ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='email' id='email' onBlur={forms.handleBlur} value={rowdata.email} onChange={handleChange} />
+            <input type="text" placeholder='Company Name (optional)' className={`${forms.errors.companyName && forms.touched.companyName ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='companyName' id='companyName' onBlur={forms.handleBlur} value={rowdata.companyName} onChange={handleChange} />
             <input type="number" placeholder='Organizer Contact' className={`${forms.errors.contact && forms.touched.contact ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='contact' id='contact' onBlur={forms.handleBlur} value={rowdata.contact} onChange={handleChange} />
             <input type="text" placeholder='Organizer Address' className={`${forms.errors.address && forms.touched.address ? 'border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6' : 'w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6'}`} name='address' id='addresss' onBlur={forms.handleBlur} value={rowdata.address} onChange={handleChange} />
           </div>
           <div className='flex justify-center'>
-            <button  type='submit' onClick={forms.handleSubmit} className='w-28 bg-slate-600 rounded-md text-white h-9 b'>Submit</button>
+            <button  type='submit' onClick={()=>edit(rowdata.userId)} className='w-28 bg-slate-600 rounded-md text-white h-9 b'>Submit</button>
           </div>
         </Modal>
 
