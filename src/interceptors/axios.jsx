@@ -2,6 +2,8 @@ import axios from "axios";
 
 const apiInstance = axios.create({
   baseURL: "http://localhost:3000/v1/",
+  // baseURL: "http://facesyncapi.whydev.co.in/v1/",
+
 });
 
 // Request interceptor
