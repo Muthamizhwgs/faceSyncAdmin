@@ -62,3 +62,8 @@ export const UploadGroupPhotoes = async (data) => {
     const ApiResponse = await useAxiosInterceptors.post('admin/groups', data);
     return ApiResponse
 }
+
+export const face = async () => {
+    const ApiResponse = await useAxiosInterceptors.get('admin/match');
+    return ApiResponse
+}

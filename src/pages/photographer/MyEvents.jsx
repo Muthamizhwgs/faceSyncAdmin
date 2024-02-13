@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { FaTrash } from 'react-icons/fa';
-import { UploadGroupPhotoes } from "../../services/AdminServices"
+import { UploadGroupPhotoes,face } from "../../services/AdminServices"
 import Loader from '../../utils/loadder';
 
 const Myevents = () => {
@@ -55,6 +55,16 @@ const Myevents = () => {
     setSavedPictures(newPictures);
   };
 
+
+  const faceMacth = async()=>{
+    try {
+      let val = await face()
+      console.log(val.data)
+    } catch (error) {
+      
+    }
+  }
+
   return (
     <>
       {loader ? < Loader data={loader} /> : null}
@@ -70,6 +80,7 @@ const Myevents = () => {
             className='pl-20'
           />
           <button onClick={handleSave} className='bg-blue-500 px-8 py-2 text-white rounded-lg'>Upload</button>
+          <button onClick={faceMacth} className='bg-blue-500 px-8 py-2 text-white rounded-lg'>Finish</button>
         </div>
         <div className={`grid grid-cols-4 place-items-center  p-4 ${savedPictures.length > 0 ? 'border-2 border-dashed' : ''}`}>
           {savedPictures.map((picture, index) => (
