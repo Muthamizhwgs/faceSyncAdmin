@@ -212,9 +212,9 @@ function ManageEvents() {
       };
       // let val = await createEvents(values);
       console.log(values, "ssss");
-      // MyEvents();
-      // handleCancel();
-      // forms.resetForm();
+      MyEvents();
+      handleCancel();
+      forms.resetForm();
     } catch (error) {
       console.log(error);
     }
@@ -294,10 +294,10 @@ function ManageEvents() {
     // console.log(forms.values.eventCategory === "Others")
     // console.log(label.label);
 
-    if (label.label === "Others") {
+    if (label.value === "Others") {
       console.log("trihh");
       setShowText(true);
-    } else if (label.label !== "Others") {
+    } else if (label.value !== "Others") {
       setShowText(false);
     }
     forms.setFieldValue("eventCategory", label.value);
@@ -345,30 +345,30 @@ function ManageEvents() {
               // }
               options={[
                 {
-                  value: "1",
+                  value: "Wedding",
                   label: "Wedding",
                 },
                 {
-                  value: "2",
+                  value: "Birthday",
                   label: "Birthday",
                 },
                 {
-                  value: "3",
+                  value: "Anniversary",
                   label: "Anniversary",
                 },
                 {
-                  value: "4",
+                  value: "New year",
                   label: "New year",
                 },
                 {
-                  value: "5",
+                  value: "Others",
                   label: "Others",
                 },
               ]}
               value={forms.values.eventCategory}
               onChange={(value, label) => handleOther(value, label)}
             />
-            {forms.values.eventCategory === "5" && (
+            {forms.values.eventCategory === "Others" && (
               <input
                 type="text"
                 placeholder="Others"

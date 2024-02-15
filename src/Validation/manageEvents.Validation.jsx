@@ -14,7 +14,7 @@ export const ManageEventsSchema = Yup.object({
     //     otherwise: Yup.string().notRequired(),
     //   }),
       other: Yup.string().when('eventCategory', (value) => {
-          if (value == '5') {
+          if (value == 'Others') {
               return Yup.string().required("Enter other event")
           } else {
               return Yup.string()
