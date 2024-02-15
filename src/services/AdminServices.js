@@ -82,3 +82,9 @@ export const updateEventOrganizer = async (id, data) => {
     const ApiResponse = await useAxiosInterceptors.put(`admin/update/Photographer/${id}`,data)
     return ApiResponse
 }
+
+
+export const updateEvent = async (id, data) => {
+    const ApiResponse = await useAxiosInterceptors.put(`admin/updateEvents/${id}`,data)
+    return ApiResponse
+}

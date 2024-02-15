@@ -19,6 +19,7 @@ import {
   EditeEvent,
   getPhotoGrapher,
   assignPhotographer,
+  updateEvent,
 } from "../../services/AdminServices";
 import DateFormat from "../../utils/dateFormat";
 import { MdDelete } from "react-icons/md";
@@ -28,6 +29,7 @@ import upimg from "../../assets/upimg.png";
 import assign from "../../assets/assign.png";
 import imageUpload from "../../assets/upload.png";
 import { ExclamationCircleFilled } from "@ant-design/icons";
+import DataTable from "react-data-table-component";
 
 function ManageEvents() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,8 +58,13 @@ function ManageEvents() {
     ManageEventsInitValue.eventName = data.eventName;
     ManageEventsInitValue.eventLocation = data.eventLocation;
     ManageEventsInitValue.eventDate = data.eventDate;
-    ManageEventsInitValue.eventSummary = data.eventSummary;
+    ManageEventsInitValue.eventCategory = data.eventCategory;
+    ManageEventsInitValue.assignPhotographer = data.assignPhotographer;
+    ManageEventsInitValue.hostName = data.hostName;
+    ManageEventsInitValue.hostEmail = data.hostEmail;
+    ManageEventsInitValue.hostWhatsappNumber = data.hostWhatsappNumber;
     setId(data._id);
+    console.log(data._id)
     setEdit(true);
     setIsModalOpen(true);
     console.log(data);
@@ -156,7 +163,22 @@ function ManageEvents() {
   const EditForms = async (values) => {
     setLoader(true);
     try {
-      let val = await EditeEvent(id, values);
+      const data = { ...values };
+
+      if (values.eventCategory === "Others") {
+        data.eventCategory = values.other;
+      }
+
+      const finalData =
+        values.eventCategory === "Others"
+          ? Object.fromEntries(
+              Object.entries(data).filter(([key]) => key !== "other")
+            )
+          : Object.fromEntries(
+              Object.entries(data).filter(([key]) => key !== "other")
+            );
+
+      let val = await updateEvent(id, finalData);
       console.log(val);
       MyEvents();
       handleCancel();
@@ -167,7 +189,6 @@ function ManageEvents() {
     }
   };
 
- 
   const handleCancel = () => {
     setIsModalOpen(false);
     forms.initialValues.eventName = "";
@@ -261,7 +282,7 @@ function ManageEvents() {
       let adminStatus = {
         active: false,
       };
-      let val = await EditeEvent(data._id, adminStatus);
+      // let val = await EditeEvent(data._id, adminStatus);
       console.log(val);
       MyEvents();
     } catch (error) {
@@ -308,7 +329,6 @@ function ManageEvents() {
   };
 
   const handleOther = (value, label) => {
-
     if (label.value === "Others") {
       setShowText(true);
     } else if (label.value !== "Others") {
@@ -316,6 +336,95 @@ function ManageEvents() {
       forms.setFieldValue("other", "");
     }
     forms.setFieldValue("eventCategory", label.value);
+  };
+
+  const [filteredData, setFilteredData] = useState([]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const filterItem = (events) => {
+      return Object.values(events).some((value) => {
+        if (typeof value === "string") {
+          const lowerCaseValue = value.toString().toLowerCase();
+          return lowerCaseValue.includes(searchTerm.toLowerCase());
+        } else if (value instanceof Date) {
+          const dateValue = value.toISOString().toLowerCase();
+          return dateValue.includes(searchTerm.toLowerCase());
+        } else if (typeof value == "number") {
+          const stringValue = value.toString().toLowerCase();
+          return stringValue === searchTerm.toLowerCase();
+        }
+        return false;
+      });
+    };
+
+    const filteredResult = events.filter(filterItem);
+
+    setFilteredData(filteredResult);
+  }, [events, searchTerm]);
+
+  const columns = [
+    {
+      name: <h1 className="text-lg text-gray-500">S.No</h1>,
+      selector: (row, ind) => ind + 1,
+    },
+    {
+      name: <h1 className="text-lg text-gray-500">Event Name</h1>,
+      selector: (row) => row.eventName,
+    },
+
+    {
+      name: <h1 className="text-lg text-gray-500">Event Date</h1>,
+      selector: (row) => row.eventDate,
+    },
+    {
+      name: <h1 className="text-lg text-gray-500">Event Location</h1>,
+      selector: (row) => row.eventLocation,
+    },
+    {
+      name: <h1 className="text-lg text-gray-500">Actions</h1>,
+      cell: (row) => (
+        <div className="flex flex-row">
+          <FaEdit
+            className="w-8 h-5 cursor-pointer text-blue-500"
+            onClick={() => {
+              handleEdit(row);
+            }}
+          />
+          <MdDelete
+            className="w-10 h-6 cursor-pointer text-red-500"
+            onClick={() => showConfirm(row)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: "48px",
+        minWidth: "800px",
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: "8px",
+        paddingRight: "8px",
+        backgroundColor: "#F3F4F6",
+        color: "#6c737f",
+        fontWeight: "bold",
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: "8px",
+        paddingRight: "8px",
+        fontSize: "16px",
+        color: "#364353",
+      },
+    },
   };
 
   return (
@@ -327,6 +436,8 @@ function ManageEvents() {
             type="text"
             placeholder="Search Events"
             className=" h-9 bg-gray-200 p-4 rounded-md"
+            onChange={(event) => setSearchTerm(event.target.value)}
+            value={searchTerm}
           />
           <button
             className="w-28 bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
@@ -347,7 +458,7 @@ function ManageEvents() {
             <Select
               showSearch
               className="w-[90%] h-[40px] mb-6"
-              placeholder="Search to Select"
+              placeholder="Select Event Category"
               optionFilterProp="children"
               filterOption={(input, option) =>
                 (option?.label ?? "").includes(input)
@@ -379,7 +490,7 @@ function ManageEvents() {
                   label: "Others",
                 },
               ]}
-              value={forms.values.eventCategory}
+              // value={forms.values.eventCategory}
               onChange={(value, label) => handleOther(value, label)}
             />
             {forms.values.eventCategory === "Others" && (
@@ -430,6 +541,7 @@ function ManageEvents() {
             <DatePicker
               format="DD-MM-YYYY"
               name="eventDate"
+              placeholder="Event date"
               id="eventDate"
               className={`${
                 forms.errors.eventDate
@@ -478,8 +590,8 @@ function ManageEvents() {
               className={`${
                 forms.errors.hostWhatsappNumber &&
                 forms.touched.hostWhatsappNumber
-                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                  : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-3"
+                  : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-3"
               }`}
               name="hostWhatsappNumber"
               id="hostWhatsappNumber"
@@ -487,7 +599,25 @@ function ManageEvents() {
               value={forms.values.hostWhatsappNumber}
               onChange={forms.handleChange}
             />
+            <Select
+              showSearch
+              className="w-[90%] h-[40px] mb-6"
+              placeholder="Assign Photographer"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "").includes(input)
+              }
+              filterSort={(optionA, optionB) =>
+                (optionA?.label ?? "")
+                  .toLowerCase()
+                  .localeCompare((optionB?.label ?? "").toLowerCase())
+              }
+              options={data}
+              // value={forms2.values.photographerId}
+              onChange={(value) => forms.setFieldValue("assignPhotographer", value)}
+            />
           </div>
+
           <div className="flex justify-center">
             <button
               type="submit"
@@ -542,12 +672,12 @@ function ManageEvents() {
 
         <Modal
           width={700}
-          title={`Upload images`}
+          // title={``}
           open={isModalOpen3}
           onCancel={() => setIsModalOpen3(false)}
           footer={false}
         >
-          <div className="flex flex-col justify-center h-fit">
+          <div className="flex flex-col justify-center h-fit mt-10">
             <div className="flex flex-col justify-center items-center space-y-5 border-2 border-dashed p-5">
               {/* Use ref to access the file input element */}
 
@@ -618,7 +748,7 @@ function ManageEvents() {
 
         {/* cards */}
 
-        <div className="grid grid-cols-3 gap-5">
+        {/* <div className="grid grid-cols-3 gap-5">
           {events &&
             events.map((data, ind) => (
               <div
@@ -682,7 +812,22 @@ function ManageEvents() {
                 </div>
               </div>
             ))}
-        </div>
+        </div> */}
+
+        {events && (
+          <div className="w-full overflow-auto">
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              fixedHeader
+              pagination
+              bordered
+              customStyles={customStyles}
+              pointerOnHover
+              onRowClicked={handleUploadIamge}
+            />
+          </div>
+        )}
       </div>
     </>
   );
