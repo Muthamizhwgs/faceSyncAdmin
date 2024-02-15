@@ -334,6 +334,7 @@ function ManageEvents() {
               className="w-[90%] h-[40px] mb-6"
               placeholder="Search to Select"
               optionFilterProp="children"
+              
               filterOption={(input, option) =>
                 (option?.label ?? "").includes(input)
               }

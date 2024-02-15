@@ -8,10 +8,17 @@ export const ManageEventsSchema = Yup.object({
     hostName:Yup.string().required("Enter host name"),
     hostEmail:Yup.string().required("Enter host email"),
     hostWhatsappNumber:Yup.string().required("Enter whatsapp number"),
-    other: Yup.string().when('eventCategory', {
-        is: (value) => value === '5', // '5' corresponds to the value of "Others"
-        then: Yup.string().required("Enter Other Event"),
-        otherwise: Yup.string().notRequired(),
+    // other: Yup.string().when('eventCategory', {
+    //     is: (value) => value === '5', // '5' corresponds to the value of "Others"
+    //     then: Yup.string().required("Enter Other Event"),
+    //     otherwise: Yup.string().notRequired(),
+    //   }),
+      other: Yup.string().when('eventCategory', (value) => {
+          if (value == '5') {
+              return Yup.string().required("Enter other event")
+          } else {
+              return Yup.string()
+          }
       }),
 })
 
