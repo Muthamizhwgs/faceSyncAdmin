@@ -14,5 +14,5 @@ export const PhotographerInitValue = {
     userName:'',
     contact:'',
     email:'',
-    role:'admin'
+    role:'photographer'
 }

@@ -11,24 +11,29 @@ import {
   createAdmin,
   AdminDeleteBySuperAdmin,
   EditeEvent,
+  updateEventOrganizer,
 } from "../../services/AdminServices";
 import { useNavigate } from "react-router-dom/dist";
 import Loader from "../../utils/loadder";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 
 function ManageAdminBySuperAdmin() {
   let navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loader, setLoader] = useState(false);
   const [manageAdmin, setManageAdmin] = useState(false);
-  const [datas, setdatas] = useState(false);
+  const [datas, setdatas] = useState([]);
 
   const [messageApi, contextHolder] = message.useMessage();
+  const [rowOpen, setrowopen] = useState(false);
+  const [rowdata, setrowdata] = useState([]);
 
   const showModal = () => {
     setIsModalOpen(true);
   };
+
   const [editmode, seteditmode] = useState(false);
   const forms = useFormik({
     initialValues: ManageAdminInitValue,
@@ -40,8 +45,10 @@ function ManageAdminBySuperAdmin() {
 
   async function edit(id) {
     try {
-      let value = await EditeEvent(id, rowdata);
+      let value = await updateEventOrganizer(id, rowdata);
       console.log(value);
+      handleCancel2();
+      getAdminData();
       // getAdmins()
     } catch (error) {
       console.log(error);
@@ -66,14 +73,15 @@ function ManageAdminBySuperAdmin() {
   const handleCancel2 = () => {
     setrowopen(false);
     forms.resetForm();
-    seteditmode(false);
   };
 
   const createAdmins = async (val) => {
+    console.log(val);
     setLoader(true);
     try {
       let data = await createAdmin(val);
       handleCancel();
+      getAdminData();
     } catch (error) {
       if (error.response.status == 401) {
         navigate("/");
@@ -128,7 +136,7 @@ function ManageAdminBySuperAdmin() {
         <div className="flex flex-row">
           <MdDelete
             className="w-10 h-6 cursor-pointer text-red-500"
-            onClick={() => handleDelete(row._id)}
+            onClick={() => showConfirm(row._id)}
           />
           <FaEdit
             className="w-8 h-5 cursor-pointer text-blue-500"
@@ -139,12 +147,9 @@ function ManageAdminBySuperAdmin() {
     },
   ];
 
-  const [rowOpen, setrowopen] = useState(false);
-  const [rowdata, setrowdata] = useState(false);
-
   async function handleUpdate(row) {
-    await setrowdata(row);
-    console.log(rowdata);
+    setrowdata(row);
+    console.log(row);
     setrowopen(true);
   }
 
@@ -157,6 +162,7 @@ function ManageAdminBySuperAdmin() {
       console.log(error);
     } finally {
       setLoader(false);
+      getAdminData();
     }
   }
 
@@ -189,6 +195,52 @@ function ManageAdminBySuperAdmin() {
     setrowdata((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     seteditmode(true);
   }
+
+  const { confirm } = Modal;
+
+  const showConfirm = (id) => {
+    confirm({
+      title: "Do you Want to delete these items?",
+      icon: <ExclamationCircleFilled />,
+      content: "",
+      onOk() {
+        handleDelete(id);
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+      okButtonProps: {
+        style: { color: "white", backgroundColor: "#0fa5e8" },
+      },
+    });
+  };
+
+  const [filteredData, setFilteredData] = useState([]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const filterItem = (datas) => {
+      return Object.values(datas).some((value) => {
+        if (typeof value === "string") {
+          const lowerCaseValue = value.toString().toLowerCase();
+          return lowerCaseValue.includes(searchTerm.toLowerCase());
+        } else if (value instanceof Date) {
+          const dateValue = value.toISOString().toLowerCase();
+          return dateValue.includes(searchTerm.toLowerCase());
+        } else if (typeof value == "number") {
+          const stringValue = value.toString().toLowerCase();
+          return stringValue === searchTerm.toLowerCase();
+        }
+        return false;
+      });
+    };
+
+    const filteredResult = datas.filter(filterItem);
+
+    setFilteredData(filteredResult);
+  }, [datas, searchTerm]);
+
   return (
     <div>
       {loader ? <Loader data={loader} /> : null}
@@ -197,6 +249,8 @@ function ManageAdminBySuperAdmin() {
           type="text"
           placeholder="Search organizer"
           className="h-9 bg-gray-200 p-4 rounded-md"
+          onChange={(event) => setSearchTerm(event.target.value)}
+          value={searchTerm}
         />
         <button
           onClick={showModal}
@@ -296,7 +350,7 @@ function ManageAdminBySuperAdmin() {
       </Modal>
 
       <Modal
-        title="Add Event Organizer"
+        title="Edit Event Organizer"
         open={rowOpen}
         onCancel={handleCancel2}
         footer={false}
@@ -376,7 +430,7 @@ function ManageAdminBySuperAdmin() {
         <div className="flex justify-center">
           <button
             type="submit"
-            onClick={() => edit(rowdata.userId)}
+            onClick={() => edit(rowdata._id)}
             className="w-28 bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
           >
             Submit
@@ -390,7 +444,7 @@ function ManageAdminBySuperAdmin() {
           columns={columns}
           fixedHeader
           pagination
-          data={datas}
+          data={filteredData}
           bordered
         />
       )}

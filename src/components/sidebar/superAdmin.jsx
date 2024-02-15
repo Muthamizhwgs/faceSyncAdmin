@@ -4,6 +4,7 @@ import SidebarHeader from "./SidebarHeader";
 import { FaUser } from "react-icons/fa";
 import pg from "../../assets/pg.png";
 import user from "../../assets/user.png";
+import FaceSync from "./FaceSync";
 
 const SuperAdmin = () => {
   let location = useLocation()
@@ -52,6 +53,7 @@ const SuperAdmin = () => {
             </li>
           </Link>
         </ul>
+        <FaceSync/>
       </div>
     </div>
   );

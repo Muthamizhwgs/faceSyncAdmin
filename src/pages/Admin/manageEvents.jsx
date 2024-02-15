@@ -167,23 +167,7 @@ function ManageEvents() {
     }
   };
 
-  const handleDelete = async (data) => {
-    setLoader(true);
-    console.log(data._id);
-    try {
-      let adminStatus = {
-        active: false,
-      };
-      let val = await EditeEvent(data._id, adminStatus);
-      console.log(val);
-      MyEvents();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoader(false);
-    }
-  };
-
+ 
   const handleCancel = () => {
     setIsModalOpen(false);
     forms.initialValues.eventName = "";
@@ -206,12 +190,28 @@ function ManageEvents() {
 
   const submitForms = async (values) => {
     try {
-      const data = {
-        ...values,
-        ...{},
-      };
-      // let val = await createEvents(values);
-      console.log(values, "ssss");
+      // const data = {
+      //   ...values,
+      //   ...{ eventCategory: values.other},
+      // };
+      const data = { ...values };
+
+      if (values.eventCategory === "Others") {
+        data.eventCategory = values.other;
+      }
+
+      const finalData =
+        values.eventCategory === "Others"
+          ? Object.fromEntries(
+              Object.entries(data).filter(([key]) => key !== "other")
+            )
+          : Object.fromEntries(
+              Object.entries(data).filter(([key]) => key !== "other")
+            );
+
+      console.log(finalData, "ssss");
+      let val = await createEvents(finalData);
+
       MyEvents();
       handleCancel();
       forms.resetForm();
@@ -254,6 +254,23 @@ function ManageEvents() {
     MyEvents();
   }, []);
 
+  const handleDelete = async (data) => {
+    setLoader(true);
+    console.log(data._id);
+    try {
+      let adminStatus = {
+        active: false,
+      };
+      let val = await EditeEvent(data._id, adminStatus);
+      console.log(val);
+      MyEvents();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
   const { confirm } = Modal;
 
   const showConfirm = (data) => {
@@ -291,14 +308,12 @@ function ManageEvents() {
   };
 
   const handleOther = (value, label) => {
-    // console.log(forms.values.eventCategory === "Others")
-    // console.log(label.label);
 
     if (label.value === "Others") {
-      console.log("trihh");
       setShowText(true);
     } else if (label.value !== "Others") {
       setShowText(false);
+      forms.setFieldValue("other", "");
     }
     forms.setFieldValue("eventCategory", label.value);
   };
@@ -334,7 +349,6 @@ function ManageEvents() {
               className="w-[90%] h-[40px] mb-6"
               placeholder="Search to Select"
               optionFilterProp="children"
-              
               filterOption={(input, option) =>
                 (option?.label ?? "").includes(input)
               }

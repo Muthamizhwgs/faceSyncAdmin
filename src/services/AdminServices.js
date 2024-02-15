@@ -72,3 +72,13 @@ export const getEventsByPhotographer = async () => {
     const ApiResponse = await useAxiosInterceptors.get('admin/getEventsBy/PhotoGrapher');
     return ApiResponse
 }
+
+export const getAllUsers = async () => {
+    const ApiResponse = await useAxiosInterceptors.get('/users/get/all/users');
+    return ApiResponse
+}
+
+export const updateEventOrganizer = async (id, data) => {
+    const ApiResponse = await useAxiosInterceptors.put(`admin/update/Photographer/${id}`,data)
+    return ApiResponse
+}

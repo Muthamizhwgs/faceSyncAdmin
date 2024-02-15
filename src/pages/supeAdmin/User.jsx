@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
 import Loader from "../../utils/loadder";
 import DataTable from "react-data-table-component";
+import { getAllUsers } from "../../services/AdminServices";
 
 const User = () => {
   const [userData, setUserData] = useState([]);
@@ -10,7 +11,7 @@ const User = () => {
   const getUsers = async () => {
     setLoader(true);
     try {
-      let data = await getPhotoGrapher();
+      let data = await getAllUsers();
       setUserData(data.data);
     } catch (error) {
       if (error.response.status == 401) {
@@ -31,14 +32,15 @@ const User = () => {
     },
     {
       name: <h1 className="text-lg text-gray-500">Name</h1>,
-      selector: (row) => row.userName,
+      selector: (row) => row.name,
     },
+
     {
-      name: <h1 className="text-lg text-gray-500">Phone Number</h1>,
+      name: <h1 className="text-lg text-gray-500">Mobile Number</h1>,
       selector: (row) => row.contact,
     },
     {
-      name: <h1 className="text-lg text-gray-500">email</h1>,
+      name: <h1 className="text-lg text-gray-500">Email Address</h1>,
       selector: (row) => row.email,
     },
   ];
@@ -69,6 +71,32 @@ const User = () => {
     },
   };
 
+  const [filteredData, setFilteredData] = useState([]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const filterItem = (userData) => {
+      return Object.values(userData).some((value) => {
+        if (typeof value === "string") {
+          const lowerCaseValue = value.toString().toLowerCase();
+          return lowerCaseValue.includes(searchTerm.toLowerCase());
+        } else if (value instanceof Date) {
+          const dateValue = value.toISOString().toLowerCase();
+          return dateValue.includes(searchTerm.toLowerCase());
+        } else if (typeof value == "number") {
+          const stringValue = value.toString().toLowerCase();
+          return stringValue === searchTerm.toLowerCase();
+        }
+        return false;
+      });
+    };
+
+    const filteredResult = userData.filter(filterItem);
+
+    setFilteredData(filteredResult);
+  }, [userData, searchTerm]);
+
   return (
     <>
       {loader ? <Loader data={loader} /> : null}
@@ -78,6 +106,8 @@ const User = () => {
             type="text"
             placeholder="Search users"
             className="h-9 bg-gray-200 p-4 rounded-md"
+            onChange={(event) => setSearchTerm(event.target.value)}
+            value={searchTerm}
           />
         </div>
 
@@ -85,7 +115,7 @@ const User = () => {
           <div className="w-full overflow-auto">
             <DataTable
               columns={columns}
-              data={userData}
+              data={filteredData}
               fixedHeader
               pagination
               bordered
