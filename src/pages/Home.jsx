@@ -18,7 +18,7 @@ const Home = () => {
     setRoleLoggedIn(localStorage.getItem("facesyncrole"));
   }, [reload]);
 
-  console.log(roleLoggedIn);
+  // console.log(roleLoggedIn);
 
   return (
     <>
@@ -44,7 +44,7 @@ const Home = () => {
             <Event />
           )}
         </div> */}
-        <div className="flex flex-col absolute left-1/5 right-0 top-16 w-full lg:w-4/5 pt-8 px-5 sm:px-8 z-0 ">
+        <div className="flex flex-col absolute left-1/5 right-0 top-16 w-full h-fit lg:w-4/5 p-8 z-0 ">
           <Outlet />
         </div>
       </div>

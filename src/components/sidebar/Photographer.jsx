@@ -21,11 +21,11 @@ const Photographer = () => {
                 } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium
             hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
             >
-              <FaUser />
+              <FaUser className="w-[17px] h-[17px]"/>
               My Events
             </li>
           </Link>
-          <Link to={"/home/manage-photographer"}>
+          {/* <Link to={"/home/manage-photographer"}>
             <li
               className={`${location.pathname == "/home/manage-photographer"
                   ? "bg-second"
@@ -36,7 +36,7 @@ const Photographer = () => {
               <img src={pg} className="w-4 h-4" />
               Manage Photographer{" "}
             </li>
-          </Link>
+          </Link> */}
         </ul>
       </div>
     </div>

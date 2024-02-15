@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import { LoginUsers } from "../services/AdminServices"
 import { useNavigate } from "react-router-dom";
 import Home from "./Home";
+import fs from "../assets/logofs.jpg";
 
 function Login() {
     const [messageApi, contextHolder] = message.useMessage();
@@ -30,13 +31,10 @@ function Login() {
             } else if (val.data.data.role === "admin"){
                 navigate('/home/manageevents')
             }else if(val.data.data.role === "photographer"){
-                navigate("/home")
+                navigate("/home/manageMyevents")
             }
            
         } catch (error) {
-            if (error.response.status == 401) {
-                navigate('/')
-            }
             messageApi.open({
                 type: 'error',
                 content: error.response.data.message,
@@ -59,21 +57,19 @@ function Login() {
                     />
                 </div>
                 <div className="md:w-[50%] w-full h-full flex justify-center items-center">
-                    <div className="w-[90%] pb-20 pt-10 bg-white rounded-xl xl:px-0 lg:px-18 md:px-20 px-8">
-                        <div className="text-center mt-9">
-                            <h1 className="text-2xl text-sky-900 font-bold">
-                                Welcome Back To Dashboard
-                            </h1>
+                    <div className="w-[90%] px-5 py-10 bg-white rounded-xl flex flex-col ">
+                        <div className="w-full ">
+                            <img src={fs} alt="logo" className="w-[400px] h-[180px] mx-auto"/>
                         </div>
-                        <div className=" w-full mx-auto mt-10  xl:w-[60%] ">
+                        <div className=" w-[70%] mx-auto ">
                             <form onSubmit={forms.handleSubmit}>
                                 <div className="flex flex-col mb-5">
                                     <label htmlFor="" className="mb-3  text-xl font-medium text-first">
-                                        User Name :
+                                        Username 
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="Enter User Name"
+                                        placeholder="Enter Username"
                                         className={forms.errors.userName && forms.touched.userName ? "w-full bg-sky-50 h-14 pl-4 rounded border-red-600 border-2" : "bg-sky-50 h-14 pl-4 rounded border-2"}
                                         name="userName"
                                         id="userName"
@@ -83,7 +79,7 @@ function Login() {
                                 </div>
                                 <div className="flex flex-col mb-5 ">
                                     <label htmlFor="" className="mb-3 text-xl font-medium text-first">
-                                        Password :
+                                        Password 
                                     </label>
                                     <input
                                         type="text"

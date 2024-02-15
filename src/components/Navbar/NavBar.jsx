@@ -35,7 +35,7 @@ const NavBar = () => {
   return (
     <div
       className="w-full lg:w-4/5  h-16 flex flex-row justify-end px-4 fixed left-1/5 right-0 top-0
-bg-fourth z-20 border-b border-stone-200"
+bg-gray-50 z-20 border-b border-stone-200 "
     >
       <div className="flex items-center" ref={menuRef}>
         <img

@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import SidebarHeader from "./SidebarHeader";
 import { FaUser } from "react-icons/fa";
 import pg from "../../assets/pg.png";
+import user from "../../assets/user.png";
 
 const SuperAdmin = () => {
   let location = useLocation()
@@ -21,8 +22,8 @@ const SuperAdmin = () => {
                 } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium
             hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
             >
-              <FaUser />
-              Manage Admin
+              <img className="w-4 h-4" src={user}/>
+              Event Organizer
             </li>
           </Link>
           <Link to={"/home/manage-photographer"}>
@@ -34,20 +35,20 @@ const SuperAdmin = () => {
               hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
             >
               <img src={pg} className="w-4 h-4" />
-              Manage Photographer{" "}
+              Photographer{" "}
             </li>
           </Link>
-          <Link to={"/home/manageMyevents"}>
+          <Link to={"/home/users"}>
             {" "}
             <li
-              className={`${location.pathname == "/home/manageMyevents"
+              className={`${location.pathname == "/home/users"
                   ? "bg-second"
                   : ""
                 } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium
             hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
             >
-              <FaUser />
-              My Events
+              <FaUser className="w-4 h-4"/>
+              Users
             </li>
           </Link>
         </ul>

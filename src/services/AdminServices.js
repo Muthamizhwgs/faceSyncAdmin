@@ -29,7 +29,7 @@ export const getPhotoGrapher = async () => {
 }
 
 export const EditeEvent = async (id, data) => {
-    const ApiResponse = await useAxiosInterceptors.put(`/update/Photographer/${id}`,data)
+    const ApiResponse = await useAxiosInterceptors.put(`admin/update/Photographer/${id}`,data)
     return ApiResponse
 }
 export const createAdmin = async (data) => {
@@ -65,5 +65,10 @@ export const UploadGroupPhotoes = async (data) => {
 
 export const face = async () => {
     const ApiResponse = await useAxiosInterceptors.get('admin/match');
+    return ApiResponse
+}
+
+export const getEventsByPhotographer = async () => {
+    const ApiResponse = await useAxiosInterceptors.get('admin/getEventsBy/PhotoGrapher');
     return ApiResponse
 }
