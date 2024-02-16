@@ -23,72 +23,66 @@ function ManageAdminBySuperAdmin() {
   let navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [manageAdmin, setManageAdmin] = useState(false);
   const [datas, setdatas] = useState([]);
 
   const [messageApi, contextHolder] = message.useMessage();
-  const [rowOpen, setrowopen] = useState(false);
-  const [rowdata, setrowdata] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [id, setId] = useState("");
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const [editmode, seteditmode] = useState(false);
   const forms = useFormik({
     initialValues: ManageAdminInitValue,
     validationSchema: ManageAdminSchema,
     onSubmit: (values) => {
-      submitForms(values);
+      editMode ? updateForms(values) : submitForms(values);
     },
   });
 
-  async function edit(id) {
+  const updateForms = async (values) => {
+    setLoader(true);
     try {
-      let value = await updateEventOrganizer(id, rowdata);
+      let value = await updateEventOrganizer(id, values);
       console.log(value);
-      handleCancel2();
-      getAdminData();
+      handleCancel();
+
       // getAdmins()
     } catch (error) {
       console.log(error);
+    } finally {
+      getAdminData();
+      setLoader(false);
     }
-  }
+  };
 
   const submitForms = async (values) => {
     console.log(values);
     setLoader(true);
     try {
-      let val = await createAdmins(values);
+      let val = await createAdmin(values);
       console.log(val);
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    forms.resetForm();
-  };
-  const handleCancel2 = () => {
-    setrowopen(false);
-    forms.resetForm();
-  };
-
-  const createAdmins = async (val) => {
-    console.log(val);
-    setLoader(true);
-    try {
-      let data = await createAdmin(val);
-      handleCancel();
-      getAdminData();
-    } catch (error) {
       if (error.response.status == 401) {
         navigate("/");
       }
     } finally {
+      getAdminData();
       setLoader(false);
     }
+  };
+
+  const handleCancel = () => {
+    (ManageAdminInitValue.userName = ""),
+      (ManageAdminInitValue.email = ""),
+      (ManageAdminInitValue.address = ""),
+      (ManageAdminInitValue.companyName = ""),
+      (ManageAdminInitValue.contact = "");
+    setIsModalOpen(false);
+    setEditMode(false);
+    forms.resetForm();
   };
 
   const getAdminData = async () => {
@@ -113,32 +107,28 @@ function ManageAdminBySuperAdmin() {
     {
       name: <h1 className="text-base text-gray-600 ">S.No</h1>,
       selector: (row, ind) => ind + 1,
-      width:"60px"
+      width: "60px",
     },
     {
       name: <h1 className="text-base text-gray-600">Name</h1>,
       selector: (row) => <p className="capitalize">{row.userName}</p>,
-      width:"150px"
-      
+      width: "150px",
     },
     {
       name: <h1 className="text-base text-gray-600">Mobile Number</h1>,
-      selector: (row) =><p className="capitalize">{ row.contact}</p>,
-   
+      selector: (row) => <p className="capitalize">{row.contact}</p>,
     },
     {
       name: <h1 className="text-base text-gray-600">Email Address</h1>,
-      selector: (row) =><p className="">{row.email}</p>,
-   
+      selector: (row) => <p className="">{row.email}</p>,
     },
     {
       name: <h1 className="text-base text-gray-600">Address</h1>,
-      selector: (row) => <p  className="capitalize">{row.address}</p>,
-     
+      selector: (row) => <p className="capitalize">{row.address}</p>,
     },
     {
       name: <h1 className="text-base text-gray-600">Actions</h1>,
-      width:"100px",
+      width: "100px",
       cell: (row) => (
         <div className="flex flex-row">
           <MdDelete
@@ -155,9 +145,14 @@ function ManageAdminBySuperAdmin() {
   ];
 
   async function handleUpdate(row) {
-    setrowdata(row);
-    console.log(row);
-    setrowopen(true);
+    setEditMode(true);
+    (ManageAdminInitValue.userName = row.userName),
+      (ManageAdminInitValue.email = row.email),
+      (ManageAdminInitValue.address = row.address),
+      (ManageAdminInitValue.companyName = row.companyName),
+      (ManageAdminInitValue.contact = row.contact),
+    setIsModalOpen(true);
+    setId(row._id);
   }
 
   async function handleDelete(id) {
@@ -198,11 +193,6 @@ function ManageAdminBySuperAdmin() {
       },
     },
   };
-
-  function handleChange(e) {
-    setrowdata((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    seteditmode(true);
-  }
 
   const { confirm } = Modal;
 
@@ -255,7 +245,7 @@ function ManageAdminBySuperAdmin() {
       <div className="w-full h-20 flex sm:flex-row flex-col justify-between items-baseline">
         <input
           type="text"
-          placeholder="Search organizer"
+          placeholder="Search Organizer"
           className="h-9 bg-gray-200 p-4 rounded-md text-std"
           onChange={(event) => setSearchTerm(event.target.value)}
           value={searchTerm}
@@ -269,7 +259,7 @@ function ManageAdminBySuperAdmin() {
         </button>
       </div>
       <Modal
-        title="Add Event Organizer"
+        title={editMode ? "Edit Event Organizer" : "Add Event Organizer"}
         open={isModalOpen}
         onCancel={handleCancel}
         footer={false}
@@ -352,12 +342,12 @@ function ManageAdminBySuperAdmin() {
             onClick={forms.handleSubmit}
             className="w-28 bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
           >
-            Submit
+            {editMode ? "Update" : "Submit"}
           </button>
         </div>
       </Modal>
 
-      <Modal
+      {/* <Modal
         title="Edit Event Organizer"
         open={rowOpen}
         onCancel={handleCancel2}
@@ -438,13 +428,13 @@ function ManageAdminBySuperAdmin() {
         <div className="flex justify-center">
           <button
             type="submit"
-            onClick={() => edit(rowdata._id)}
+            onClick={() => updateForms(rowdata._id)}
             className="w-28 bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
           >
             Submit
           </button>
         </div>
-      </Modal>
+      </Modal> */}
 
       {datas && (
         <DataTable
@@ -454,6 +444,7 @@ function ManageAdminBySuperAdmin() {
           pagination
           data={filteredData}
           bordered
+          fixedHeaderScrollHeight="340px"
         />
       )}
     </div>

@@ -339,6 +339,7 @@ const ManagePhotographer = () => {
               pagination
               bordered
               customStyles={customStyles}
+              fixedHeaderScrollHeight="340px"
             />
           </div>
         )}

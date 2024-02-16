@@ -10,7 +10,7 @@ import { useFormik } from "formik";
 import Loader from "../../utils/loadder";
 
 const NavBar = () => {
-  const [showlog, setShowlog] = useState(false);
+
   const [loader, setLoader] = useState(false);
   const forms = useFormik({
     initialValues: ChangePasswordInitValues,
@@ -59,6 +59,8 @@ const NavBar = () => {
     forms.initialValues.confirmPassword = "";
   };
 
+  const [showlog, setShowlog] = useState(false);
+
   useEffect(() => {
     let handler = (e) => {
       if (!menuRef.current.contains(e.target)) {
@@ -71,6 +73,7 @@ const NavBar = () => {
       document.removeEventListener("mousedown", handler);
     };
   }, []);
+
   const handleAddEvent = () => {
     setIsModalOpen(true);
     setShowlog(!showlog);
@@ -160,7 +163,7 @@ bg-gray-50 z-20 border-b border-stone-200 "
             />
             <input
               type="password"
-              placeholder="Confirm password"
+              placeholder="Confirm new password"
               className={`${forms.errors.confirmPassword && forms.touched.confirmPassword
                 ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
                 : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"

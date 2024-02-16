@@ -3,7 +3,6 @@ import pg from "../../assets/pg.png";
 import { Link, useLocation } from "react-router-dom";
 import SidebarHeader from "./SidebarHeader";
 import event from "../../assets/event.png";
-import { FaCalendar, FaCalendarAlt, FaCalendarCheck, FaCalendarDay, FaCalendarTimes, FaCalendarWeek, FaRegCalendar, FaRegCalendarCheck, FaUser } from "react-icons/fa";
 import FaceSync from "./FaceSync";
 
 const Admin = () => {

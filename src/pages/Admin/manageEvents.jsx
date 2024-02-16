@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Modal, DatePicker, Select } from "antd";
+import { Modal, Select } from "antd";
 import { useFormik } from "formik";
 import {
   ManageEventsSchema,
@@ -22,7 +22,7 @@ import {
   updateEvent,
   getUsersByEventId,
   sendImages,
-  UploadGroupPhotoes
+  UploadGroupPhotoes,
 } from "../../services/AdminServices";
 import DateFormat from "../../utils/dateFormat";
 import { MdDelete } from "react-icons/md";
@@ -34,6 +34,9 @@ import imageUpload from "../../assets/upload.png";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import DataTable from "react-data-table-component";
 import { Tabs } from "antd";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 const { TabPane } = Tabs;
 
 function ManageEvents() {
@@ -106,9 +109,9 @@ function ManageEvents() {
           formData.append(`images`, image);
         });
 
-        formData.append('eventId', folderName);
-       
-        console.log(formData)
+        formData.append("eventId", folderName);
+
+        console.log(formData);
 
         let datas = await UploadGroupPhotoes(formData);
         console.log(datas);
@@ -130,10 +133,9 @@ function ManageEvents() {
     }
   };
 
-
   const faceMacth = async (folderName) => {
     try {
-      console.log(folderName)
+      console.log(folderName);
       let val = await sendImages(folderName);
       console.log(val.data);
     } catch (error) {}
@@ -415,9 +417,12 @@ function ManageEvents() {
 
   const getFormattedDate = (date) => {
     const dateObject = new Date(date);
-  
-    const formattedDate = `${('0' + dateObject.getDate()).slice(-2)}-${('0' + (dateObject.getMonth() + 1)).slice(-2)}-${dateObject.getFullYear()}`;
-  
+
+    const formattedDate = `${("0" + dateObject.getDate()).slice(-2)}-${(
+      "0" +
+      (dateObject.getMonth() + 1)
+    ).slice(-2)}-${dateObject.getFullYear()}`;
+
     return formattedDate;
   };
 
@@ -425,24 +430,37 @@ function ManageEvents() {
     {
       name: <h1 className="text-base  text-gray-600">S.No</h1>,
       selector: (row, ind) => ind + 1,
-      width:"100px"
+      width: "100px",
     },
     {
       name: <h1 className="text-base  text-gray-600">Event Name</h1>,
       selector: (row) => <p className="capitalize">{row.eventName}</p>,
+      width: "140px",
     },
 
     {
       name: <h1 className="text-base  text-gray-600">Event Date</h1>,
       selector: (row) => getFormattedDate(row.eventDate),
+      width: "150px",
     },
     {
-      name: <h1 className="text-base  text-gray-600">Event Location</h1>,
-      selector: (row) => <p className="capitalize">{row.eventLocation}</p>,
+      name: <h1 className="text-base  text-gray-600">Host Name</h1>,
+      selector: (row) => <p className="capitalize ">{row.hostName}</p>,
+      width: "150px",
+    },
+    {
+      name: <h1 className="text-base  text-gray-600">Host Email Address</h1>,
+      selector: (row) => <p className="capitalize">{row.hostEmail}</p>,
+      width: "250px",
+    },
+    {
+      name: <h1 className="text-base  text-gray-600">Host Whatsapp Number</h1>,
+      selector: (row) => <p className="capitalize">{row.hostWhatsappNumber}</p>,
+      width: "250px",
     },
     {
       name: <h1 className="text-base  text-gray-600">Actions</h1>,
-      width:"100px",
+      width: "100px",
       cell: (row) => (
         <div className="flex flex-row">
           <FaEdit
@@ -506,10 +524,12 @@ function ManageEvents() {
     },
   };
 
+ console.log(ManageEventsInitValue)
+
   return (
     <>
       {loader ? <Loader date={loader} /> : null}
-      <div className="w-full mx-auto font=[Inter]">
+      <div className="w-full mx-auto font-[Inter]">
         <div className="w-full h-20 flex justify-between items-baseline">
           <input
             type="text"
@@ -575,7 +595,7 @@ function ManageEvents() {
             {forms.values.eventCategory === "Others" && (
               <input
                 type="text"
-                placeholder="Others"
+                placeholder="Enter the event"
                 className={`${
                   forms.errors.other && forms.touched.other
                     ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
@@ -617,7 +637,100 @@ function ManageEvents() {
               value={forms.values.eventLocation}
               onChange={forms.handleChange}
             />
-            <DatePicker
+
+            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    sx={{
+                      backgroundColor: "#F5F5F5",
+                      color: "#105D50",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: "#105D50",
+                      },
+
+                      "& .MuiInputBase-root": {
+                        height: 45,
+                        width: 280,
+                        fontSize: "14px",
+                      },
+                      "&:hover": {
+                        // Apply styles when hovering over the TextField
+                        backgroundColor: "#EEEDED", // Change background color on hover
+                      },
+                    }}
+                    label="D.O.B *"
+                    format="DD/MM/YYYY"
+                    variant="outlined"
+                    name="dob"
+                    fullWidth
+                    type="date"
+                    //value={formData.dob}
+                    onChange={handleDobChange}
+
+                    //defaultValue={dayjs('')}
+                  />
+                </LocalizationProvider> */}
+            <div className="mb-6">
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="en-gb"
+              >
+                <DatePicker
+                  sx={{
+                    backgroundColor: "#E5E7EB",
+                    borderRadius: "6px",
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "#105D50",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        border: "1.5px solid #E5E7EB",
+                        borderRadius: "6px",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#E5E7EB",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#E5E7EB",
+                      },
+                    },
+                    "& .MuiInputBase-input": {
+                      fontSize: "14px",
+                      height: "42px",
+                      color: "#4B5563",
+                    },
+                    "& .MuiInputBase-root": {
+                      fontSize: "14px",
+                      height: "44px",
+                      width: "425px",
+                      "&:hover": {
+                        backgroundColor: "#E5E7EB",
+                      },
+                    },
+                    "& .MuiFormLabel-root": {
+                      fontSize: "13px",
+                      color: "#4B5563",
+                    },
+                  }}
+                  name="eventDate"
+                  placeholder="Event date"
+                  id="eventDate"
+                  
+                  className={`${
+                    forms.errors.eventDate
+                      ? "border-red-500"
+                      : ""
+                  } `}
+                  value={
+                    forms.values.eventDate ? moment(forms.values.eventDate) : null
+                  }
+                  onChange={(date) =>
+                    forms.setFieldValue("eventDate", date ? date.toDate() : null)
+                  }
+                />
+              </LocalizationProvider>
+            </div>
+
+            {/* <DatePicker
               format="DD-MM-YYYY"
               name="eventDate"
               placeholder="Event date"
@@ -633,7 +746,7 @@ function ManageEvents() {
               onChange={(date) =>
                 forms.setFieldValue("eventDate", date ? date.toDate() : null)
               }
-            />
+            /> */}
 
             <input
               type="text"
@@ -833,7 +946,10 @@ function ManageEvents() {
                     {id == 2 && (
                       <>
                         {eventDetails.map((d, id) => (
-                          <div className="w-full flex flex-col justify-center items-center gap-10 mt-5" key={id}> 
+                          <div
+                            className="w-full flex flex-col justify-center items-center gap-10 mt-5"
+                            key={id}
+                          >
                             <div className="w-[60%]">
                               <img
                                 src={d.qrURL}
@@ -883,13 +999,17 @@ function ManageEvents() {
                           </div>
                           <div className="flex gap-4">
                             <button
-                             onClick={() =>handleSave(eventDetails[0]?.folderName)}
+                              onClick={() =>
+                                handleSave(eventDetails[0]?.folderName)
+                              }
                               className="w-32 bg-first rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
                             >
                               Share to guest
                             </button>
                             <button
-                              onClick={() => faceMacth(eventDetails[0]?.folderName)}
+                              onClick={() =>
+                                faceMacth(eventDetails[0]?.folderName)
+                              }
                               className="w-32 bg-first rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
                             >
                               Share to host
@@ -940,7 +1060,6 @@ function ManageEvents() {
                             }
                             value={searchTerm2}
                           />
-                        
                         </div>
                         <DataTable
                           columns={columns2}

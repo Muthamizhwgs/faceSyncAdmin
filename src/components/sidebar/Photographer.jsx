@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import SidebarHeader from "./SidebarHeader";
 import { FaUser } from "react-icons/fa";
-import pg from "../../assets/pg.png";
+import event from "../../assets/event.png";
 import FaceSync from "./FaceSync";
 
 const Photographer = () => {
@@ -22,7 +22,7 @@ const Photographer = () => {
                 } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium
             hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
             >
-              <FaUser className="w-[17px] h-[17px]"/>
+              <img src={event} className="w-[18px] h-[18px]" />
               My Events
             </li>
           </Link>

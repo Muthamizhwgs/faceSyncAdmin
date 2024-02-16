@@ -8,6 +8,7 @@ import ManagePhotographer from "./pages/Admin/ManagePhotographer";
 import Myevents from './pages/photographer/MyEvents'
 import ManageAdminBySuperAdmin from "./pages/supeAdmin/manageAdmin";
 import User from "./pages/supeAdmin/User";
+import Leads from "./pages/supeAdmin/Leads";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/home/manageAdmin" Component={ManageAdminBySuperAdmin} />
           <Route path="/home/manageMyevents" Component={Myevents} />
           <Route path="/home/users" Component={User} />
+          <Route path="/home/leads" Component={Leads} />
         </Route>
       </Routes>
     </>

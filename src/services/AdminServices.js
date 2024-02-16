@@ -117,3 +117,9 @@ export const getAllPhotographers = async () => {
     const ApiResponse = await useAxiosInterceptors.get('admin/all/photograher');
     return ApiResponse
 }
+
+
+export const getLeads = async() => {
+    const ApiResponse = await useAxiosInterceptors.get('leads');
+    return ApiResponse
+}

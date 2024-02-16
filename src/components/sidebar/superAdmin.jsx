@@ -5,6 +5,7 @@ import { FaUser } from "react-icons/fa";
 import pg from "../../assets/pg.png";
 import user from "../../assets/user.png";
 import FaceSync from "./FaceSync";
+import leads from "../../assets/leads.png";
 
 const SuperAdmin = () => {
   let location = useLocation()
@@ -50,6 +51,19 @@ const SuperAdmin = () => {
             >
               <FaUser className="w-4 h-4"/>
               Users
+            </li>
+          </Link>
+          <Link to={"/home/leads"}>
+            {" "}
+            <li
+              className={`${location.pathname == "/home/leads"
+                  ? "bg-second"
+                  : ""
+                } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium
+            hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
+            >
+              <img src={leads} className="w-5 h-5"/>
+              Leads
             </li>
           </Link>
         </ul>

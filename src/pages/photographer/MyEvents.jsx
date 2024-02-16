@@ -299,7 +299,7 @@ const Myevents = () => {
       </Modal>
 
       {loader ? <Loader date={loader} /> : null}
-      <div className="w-full mx-auto px-5 h-[100vh]">
+      <div className="w-full mx-auto px-5">
         <div className="w-full h-20 flex justify-between items-baseline">
           <input
             type="text"
