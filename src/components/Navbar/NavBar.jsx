@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import profile from "../../assets/profile-user.png";
 import { useNavigate } from "react-router-dom";
-import { Modal, DatePicker, Select } from "antd";
+import { Modal, DatePicker, Select, message } from "antd";
 import { TbLogout } from "react-icons/tb";
 import { RiSettings3Fill } from "react-icons/ri";
 import { ChangePasswordInitValues, ChangePasswordSchema } from "../../Validation/changePasswordValidation";
@@ -20,6 +20,8 @@ const NavBar = () => {
       submitForms(values);
     },
   });
+
+  const [messageApi, contextHolder] = message.useMessage();
 
   const submitForms = async (values) => {
     setLoader(true)

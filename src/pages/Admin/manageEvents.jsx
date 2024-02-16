@@ -21,6 +21,8 @@ import {
   assignPhotographer,
   updateEvent,
   getUsersByEventId,
+  sendImages,
+  UploadGroupPhotoes
 } from "../../services/AdminServices";
 import DateFormat from "../../utils/dateFormat";
 import { MdDelete } from "react-icons/md";
@@ -95,15 +97,19 @@ function ManageEvents() {
     setIsModalOpen3(true);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (folderName) => {
     console.log(selectedPictures);
     if (selectedPictures.length > 0) {
       try {
         const formData = new FormData();
         selectedPictures.forEach((image) => {
           formData.append(`images`, image);
-          formData.append(`eventId`, eventId);
         });
+
+        formData.append('eventId', folderName);
+       
+        console.log(formData)
+
         let datas = await UploadGroupPhotoes(formData);
         console.log(datas);
       } catch (error) {
@@ -124,9 +130,11 @@ function ManageEvents() {
     }
   };
 
-  const faceMacth = async () => {
+
+  const faceMacth = async (folderName) => {
     try {
-      let val = await face();
+      console.log(folderName)
+      let val = await sendImages(folderName);
       console.log(val.data);
     } catch (error) {}
   };
@@ -391,6 +399,7 @@ function ManageEvents() {
     {
       name: <h1 className="text-base  text-gray-600">S.No</h1>,
       selector: (row, ind) => ind + 1,
+      width:"100px"
     },
     {
       name: <h1 className="text-base  text-gray-600">Event Name</h1>,
@@ -407,6 +416,7 @@ function ManageEvents() {
     },
     {
       name: <h1 className="text-base  text-gray-600">Actions</h1>,
+      width:"100px",
       cell: (row) => (
         <div className="flex flex-row">
           <FaEdit
@@ -751,7 +761,7 @@ function ManageEvents() {
                             <p className="text-sm text-gray-700 font-semibold font-[Inter]">
                               Event Date:{" "}
                               <span className="text-gray-500 font-medium">
-                                {d.eventDate}
+                                {getFormattedDate(d.eventDate)}
                               </span>
                             </p>
                             <p className="text-sm text-gray-700 font-semibold font-[Inter]">
@@ -847,14 +857,14 @@ function ManageEvents() {
                           </div>
                           <div className="flex gap-4">
                             <button
-                              onClick={handleSave}
-                              className="w-48 bg-first rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
+                             onClick={() =>handleSave(eventDetails[0]?.folderName)}
+                              className="w-32 bg-first rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
                             >
                               Share to guest
                             </button>
                             <button
-                              onClick={faceMacth}
-                              className="w-48 bg-first rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
+                              onClick={() => faceMacth(eventDetails[0]?.folderName)}
+                              className="w-32 bg-first rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
                             >
                               Share to host
                             </button>

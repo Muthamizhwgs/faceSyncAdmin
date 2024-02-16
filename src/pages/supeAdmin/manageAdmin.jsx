@@ -113,25 +113,32 @@ function ManageAdminBySuperAdmin() {
     {
       name: <h1 className="text-base text-gray-600 ">S.No</h1>,
       selector: (row, ind) => ind + 1,
+      width:"60px"
     },
     {
       name: <h1 className="text-base text-gray-600">Name</h1>,
       selector: (row) => <p className="capitalize">{row.userName}</p>,
+      width:"150px"
+      
     },
     {
       name: <h1 className="text-base text-gray-600">Mobile Number</h1>,
       selector: (row) =><p className="capitalize">{ row.contact}</p>,
+   
     },
     {
       name: <h1 className="text-base text-gray-600">Email Address</h1>,
-      selector: (row) =><p className="">{row.email}</p>
+      selector: (row) =><p className="">{row.email}</p>,
+   
     },
     {
       name: <h1 className="text-base text-gray-600">Address</h1>,
-      selector: (row) => <p  className="capitalize">{row.address}</p>
+      selector: (row) => <p  className="capitalize">{row.address}</p>,
+     
     },
     {
       name: <h1 className="text-base text-gray-600">Actions</h1>,
+      width:"100px",
       cell: (row) => (
         <div className="flex flex-row">
           <MdDelete

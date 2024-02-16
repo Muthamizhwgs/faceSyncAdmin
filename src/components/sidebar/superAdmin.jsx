@@ -12,7 +12,7 @@ const SuperAdmin = () => {
   return (
     <div className="w-full h-[100vh] bg-first">
       <SidebarHeader />
-      <div className="border-t border-gray-500 space-y-[270px]">
+      <div className="border-t border-gray-500 h-[75%] relative">
         <ul className="flex flex-col gap-3 p-5 ">
           <Link to={"/home/manageAdmin"}>
             {" "}

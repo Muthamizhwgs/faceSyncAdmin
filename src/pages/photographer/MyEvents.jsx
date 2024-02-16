@@ -4,6 +4,7 @@ import {
   UploadGroupPhotoes,
   face,
   getEventsByPhotographer,
+  sendImages,
 } from "../../services/AdminServices";
 import Loader from "../../utils/loadder";
 import { MdDelete, MdOutlineDateRange } from "react-icons/md";
@@ -45,15 +46,19 @@ const Myevents = () => {
     setUploadedImageUrls((prevUrls) => [...prevUrls, ...urls]);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (folderName) => {
     console.log(selectedPictures);
     if (selectedPictures.length > 0) {
       try {
         const formData = new FormData();
         selectedPictures.forEach((image) => {
           formData.append(`images`, image);
-          formData.append(`eventId`, eventId);
         });
+
+        formData.append('eventId', folderName);
+       
+        console.log(formData)
+
         let datas = await UploadGroupPhotoes(formData);
         console.log(datas);
       } catch (error) {
@@ -88,9 +93,9 @@ const Myevents = () => {
     setIsModalOpen(false);
   };
 
-  const faceMacth = async () => {
+  const faceMacth = async (folderName) => {
     try {
-      let val = await face();
+      let val = await sendImages(folderName);
       console.log(val.data);
     } catch (error) {}
   };
@@ -114,7 +119,6 @@ const Myevents = () => {
   useEffect(() => {
     MyEvents();
   }, []);
-
 
   const [filteredData, setFilteredData] = useState([]);
 
@@ -144,13 +148,9 @@ const Myevents = () => {
 
   const getFormattedDate = (date) => {
     const dateObject = new Date(date);
-
-    const formattedDate = dateObject.toLocaleString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-
+  
+    const formattedDate = `${('0' + dateObject.getDate()).slice(-2)}-${('0' + (dateObject.getMonth() + 1)).slice(-2)}-${dateObject.getFullYear()}`;
+  
     return formattedDate;
   };
 
@@ -172,7 +172,6 @@ const Myevents = () => {
       name: <h1 className="text-base  text-gray-600">Event Location</h1>,
       selector: (row) => <p className="capitalize">{row.eventLocation}</p>,
     },
-    
   ];
 
   const customStyles = {
@@ -206,6 +205,12 @@ const Myevents = () => {
     setId(data._id);
     setEventDetails([data]);
     setIsModalOpen3(true);
+  };
+
+  const handleDeleteImage = (index) => {
+    console.log("handle");
+    const newPictures = savedPictures.filter((_, i) => i !== index);
+    setSavedPictures(newPictures);
   };
 
   return (
@@ -338,7 +343,7 @@ const Myevents = () => {
             ))}
         </div> */}
 
-<Modal
+        <Modal
           width={900}
           title={`${eventDetails[0]?.eventName}`}
           open={isModalOpen3}
@@ -373,7 +378,7 @@ const Myevents = () => {
                             <p className="text-sm text-gray-700 font-semibold font-[Inter]">
                               Event Date:{" "}
                               <span className="text-gray-500 font-medium">
-                                {d.eventDate}
+                                {getFormattedDate(d.eventDate)}
                               </span>
                             </p>
                             <p className="text-sm text-gray-700 font-semibold font-[Inter]">
@@ -391,7 +396,7 @@ const Myevents = () => {
                             <p className="text-sm text-gray-700 font-semibold font-[Inter]">
                               Assigned Photographer:{" "}
                               <span className="text-gray-500 font-medium">
-                                {d.photographername}
+                                {d.photographerName}
                               </span>
                             </p>
                             <p className="text-sm text-gray-700 font-semibold font-[Inter]">
@@ -416,7 +421,7 @@ const Myevents = () => {
                         ))}
                       </div>
                     )}
-                    
+
                     {id == 2 && (
                       <div className="w-full flex flex-col justify-center h-fit mt-10">
                         <div className="flex flex-col justify-center items-center gap-10 border-2 border-dashed p-5">
@@ -448,14 +453,14 @@ const Myevents = () => {
                           </div>
                           <div className="flex gap-4">
                             <button
-                              onClick={handleSave}
-                              className="w-48 bg-first rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
+                              onClick={() =>handleSave(eventDetails[0]?.folderName)}
+                              className="w-32 bg-first rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
                             >
                               Share to guest
                             </button>
                             <button
-                              onClick={faceMacth}
-                              className="w-48 bg-first rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
+                              onClick={() => faceMacth(eventDetails[0]?.folderName)}
+                              className="w-32 bg-first rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
                             >
                               Share to host
                             </button>
@@ -492,8 +497,6 @@ const Myevents = () => {
                         </div>
                       </div>
                     )}
-
-              
                   </TabPane>
                 );
               })}

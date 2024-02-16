@@ -161,6 +161,7 @@ const ManagePhotographer = () => {
     {
       name: <h1 className="text-base text-gray-600">S.No</h1>,
       selector: (row, ind) => ind + 1,
+      width:"80px"
     },
     {
       name: <h1 className="text-base text-gray-600">Name</h1>,
@@ -176,6 +177,7 @@ const ManagePhotographer = () => {
     },
     {
       name: <h1 className="text-base text-gray-600">Actions</h1>,
+      width:"130px",
       cell: (row) => (
         <div className="flex flex-row">
           <MdDelete

@@ -72,6 +72,11 @@ export const face = async () => {
     return ApiResponse
 }
 
+export const sendImages = async (id) => {
+    const ApiResponse = await useAxiosInterceptors.get(`admin/send/images/host/${id}`);
+    return ApiResponse
+}
+
 export const getEventsByPhotographer = async () => {
     const ApiResponse = await useAxiosInterceptors.get('admin/getEventsBy/PhotoGrapher');
     return ApiResponse
