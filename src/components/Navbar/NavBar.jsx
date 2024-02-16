@@ -8,6 +8,7 @@ import { ChangePasswordInitValues, ChangePasswordSchema } from "../../Validation
 import { updatePassword } from "../../services/AdminServices";
 import { useFormik } from "formik";
 
+
 const NavBar = () => {
   const [showlog, setShowlog] = useState(false);
   const forms = useFormik({
@@ -81,7 +82,7 @@ bg-gray-50 z-20 border-b border-stone-200 "
       <div className="flex items-center" ref={menuRef}>
         <img
           src={profile}
-          className="w-8 h-8 cursor-pointer"
+          className="w-8 h-8 cursor-pointer rounded-full"
           onClick={() => setShowlog(!showlog)}
         />
 

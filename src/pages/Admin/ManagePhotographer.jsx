@@ -7,17 +7,25 @@ import {
 import { useFormik } from "formik";
 import {
   CreatePhotoGrapher,
+  getAllPhotographers,
   getPhotoGrapher,
+  photoGrapherDeleteBySuperAdmin,
+  updatePhotographer,
 } from "../../services/AdminServices";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../utils/loadder";
 import DataTable from "react-data-table-component";
+import { FaEdit } from "react-icons/fa";
+import { ExclamationCircleFilled } from "@ant-design/icons";
+import { MdDelete } from "react-icons/md";
 
 const ManagePhotographer = () => {
   let navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loader, setLoader] = useState(false);
   const [photoGrapher, setphotoGrapher] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [id, setId] = useState("");
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -30,7 +38,7 @@ const ManagePhotographer = () => {
     validationSchema: ManagephotographerSchema,
     onSubmit: (values) => {
       console.log(values);
-      submitForms(values);
+      editMode ? updateForms(values) : submitForms(values);
     },
   });
 
@@ -39,7 +47,6 @@ const ManagePhotographer = () => {
     try {
       let data = await CreatePhotoGrapher(values);
       console.log(data.data);
-      getPhotoGraphers();
       handleCancel();
     } catch (error) {
       if (error.response.status == 401) {
@@ -51,19 +58,52 @@ const ManagePhotographer = () => {
       });
     } finally {
       setLoader(false);
+      getPhotoGraphers();
+    }
+  };
+
+  const updateForms = async (values) => {
+    setLoader(true);
+    try {
+      let data = await updatePhotographer(id, values);
+      handleCancel();
+      console.log(data.data);
+    } catch (error) {
+      if (error.response.status == 401) {
+        navigate("/");
+      }
+      messageApi.open({
+        type: "error",
+        content: error.response.data.message,
+      });
+    } finally {
+      setLoader(false);
+      getPhotoGraphers();
     }
   };
 
   const handleCancel = () => {
+    (PhotographerInitValue.userName = ""),
+      (PhotographerInitValue.email = ""),
+      (PhotographerInitValue.contact = ""),
+      forms.resetForm();
+    setId("");
+    setEditMode(false);
     setIsModalOpen(false);
-    forms.resetForm();
   };
 
   const getPhotoGraphers = async () => {
+    const getRole = localStorage.getItem("facesyncrole");
+
     setLoader(true);
     try {
+      let alldata = await getAllPhotographers();
       let data = await getPhotoGrapher();
-      setphotoGrapher(data.data);
+      if (getRole === "SuperAdmin") {
+        setphotoGrapher(alldata.data);
+      } else {
+        setphotoGrapher(data.data);
+      }
     } catch (error) {
       if (error.response.status == 401) {
         navigate("/");
@@ -76,22 +116,78 @@ const ManagePhotographer = () => {
     getPhotoGraphers();
   }, []);
 
+  async function handleUpdate(row) {
+    (PhotographerInitValue.userName = row.userName),
+      (PhotographerInitValue.email = row.email),
+      (PhotographerInitValue.contact = row.contact),
+      setEditMode(true);
+    setIsModalOpen(true);
+    setId(row._id);
+  }
+
+  async function handleDelete(id) {
+    try {
+      setLoader(true);
+      let deletevalue = await photoGrapherDeleteBySuperAdmin(id);
+      console.log(deletevalue);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoader(false);
+      getPhotoGraphers();
+    }
+  }
+
+  const { confirm } = Modal;
+
+  const showConfirm = (data) => {
+    confirm({
+      title: "Do you want to delete these photographer?",
+      icon: <ExclamationCircleFilled />,
+      content: "",
+      onOk() {
+        handleDelete(data);
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+      okButtonProps: {
+        style: { color: "white", backgroundColor: "#0fa5e8" },
+      },
+    });
+  };
+
   const columns = [
     {
-      name: <h1 className="text-lg text-gray-500">S.No</h1>,
+      name: <h1 className="text-base text-gray-600">S.No</h1>,
       selector: (row, ind) => ind + 1,
     },
     {
-      name: <h1 className="text-lg text-gray-500">Name</h1>,
-      selector: (row) => row.userName,
+      name: <h1 className="text-base text-gray-600">Name</h1>,
+      selector: (row) => <p className="capitalize">{row.userName}</p>,
     },
     {
-      name: <h1 className="text-lg text-gray-500">Mobile Number</h1>,
-      selector: (row) => row.contact,
+      name: <h1 className="text-base text-gray-600">Mobile Number</h1>,
+      selector: (row) => <p className="capitalize">{row.contact}</p>,
     },
     {
-      name: <h1 className="text-lg text-gray-500">Email Address</h1>,
-      selector: (row) => row.email,
+      name: <h1 className="text-base text-gray-600">Email Address</h1>,
+      selector: (row) => <p className="">{row.email}</p>,
+    },
+    {
+      name: <h1 className="text-base text-gray-600">Actions</h1>,
+      cell: (row) => (
+        <div className="flex flex-row">
+          <MdDelete
+            className="w-10 h-6 cursor-pointer text-red-500"
+            onClick={() => showConfirm(row._id)}
+          />
+          <FaEdit
+            className="w-8 h-5 cursor-pointer text-blue-500"
+            onClick={() => handleUpdate(row)}
+          />
+        </div>
+      ),
     },
   ];
 
@@ -106,7 +202,7 @@ const ManagePhotographer = () => {
       style: {
         paddingLeft: "8px",
         paddingRight: "8px",
-        backgroundColor: "#F3F4F6",
+        backgroundColor: "#E5E7EB",
         color: "#6c737f",
         fontWeight: "bold",
       },
@@ -115,7 +211,7 @@ const ManagePhotographer = () => {
       style: {
         paddingLeft: "8px",
         paddingRight: "8px",
-        fontSize: "16px",
+        fontSize: "14px",
         color: "#364353",
       },
     },
@@ -151,17 +247,17 @@ const ManagePhotographer = () => {
     <>
       {loader ? <Loader data={loader} /> : null}
       {contextHolder}
-      <div className="w-full mx-auto ">
+      <div className="w-full mx-auto font-[Inter]">
         <div className="w-full h-20 flex sm:flex-row flex-col justify-between items-baseline">
           <input
             type="text"
             placeholder="Search Photographer"
-            className="h-9 bg-gray-200 p-4 rounded-md"
+            className="h-9 bg-gray-200 p-4 rounded-md text-sm"
             onChange={(event) => setSearchTerm(event.target.value)}
             value={searchTerm}
           />
           <button
-            className="w-40 bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
+            className="px-2 py-1 text-sm bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
             onClick={showModal}
           >
             {" "}
@@ -172,7 +268,7 @@ const ManagePhotographer = () => {
         {/* models */}
 
         <Modal
-          title="Add Photographer"
+          title={editMode ? "Edit Photographer" : "Add Photographer"}
           open={isModalOpen}
           onCancel={handleCancel}
           footer={false}
@@ -227,7 +323,7 @@ const ManagePhotographer = () => {
               onClick={forms.handleSubmit}
               className="w-28 bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
             >
-              Submit
+              {editMode ? "Update" : "Submit"}
             </button>
           </div>
         </Modal>

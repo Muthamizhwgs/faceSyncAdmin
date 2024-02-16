@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,21 +6,6 @@
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--secondary) var(--primary);
-}
-
-*::-webkit-scrollbar {
-  width: 20px;
-}
-
-*::-webkit-scrollbar-track {
-  background: var(--primary);
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: var(--secondary);
-  border-radius: 100px;
-  border: 5px solid var(--primary);
 }
 
 
@@ -28,8 +13,17 @@
 :root {
   --primary: #1f2937;
   --secondary: #af2d73;
-  font-family: "Lato";
+  font-family: "Inter", sans-serif;
 }
 
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #1677ff;
+  text-shadow: 0 0 0.25px currentcolor;
+  font-family: 'Inter';
+}
+
+.ant-modal-title{
+  font-family: 'Inter';
+}
 
 

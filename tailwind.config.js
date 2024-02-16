@@ -9,6 +9,9 @@ export default {
       colors:{
         first: "#1F2937",
         second: "#AF2D73",
+      },
+      fontSize:{
+        std:"14px",
       }
     },
   },

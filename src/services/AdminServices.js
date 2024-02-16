@@ -86,3 +86,29 @@ export const updateEventOrganizer = async (id, data) => {
     const ApiResponse = await useAxiosInterceptors.put(`admin/update/Photographer/${id}`, data)
     return ApiResponse
 }
+
+
+export const updateEvent = async (id, data) => {
+    const ApiResponse = await useAxiosInterceptors.put(`admin/updateEvents/${id}`,data)
+    return ApiResponse
+}
+
+export const getUsersByEventId = async (id) => {
+    const ApiResponse = await useAxiosInterceptors.get(`users/datas/${id}`)
+    return ApiResponse
+}
+
+export const updatePhotographer = async (id, data) => {
+    const ApiResponse = await useAxiosInterceptors.put(`admin/update/Photographer/${id}`,data)
+    return ApiResponse
+}
+
+export const photoGrapherDeleteBySuperAdmin = async (_id) => {
+    const ApiResponse = await useAxiosInterceptors.put(`admin/update/Photographer/${_id}`, { active: false })
+    return ApiResponse
+}
+
+export const getAllPhotographers = async () => {
+    const ApiResponse = await useAxiosInterceptors.get('admin/all/photograher');
+    return ApiResponse
+}

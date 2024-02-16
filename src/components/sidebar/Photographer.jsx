@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import SidebarHeader from "./SidebarHeader";
 import { FaUser } from "react-icons/fa";
 import pg from "../../assets/pg.png";
+import FaceSync from "./FaceSync";
 
 const Photographer = () => {
   let location = useLocation()
@@ -37,6 +38,7 @@ const Photographer = () => {
               Manage Photographer{" "}
             </li>
           </Link> */}
+          <FaceSync/>
         </ul>
       </div>
     </div>
