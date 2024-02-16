@@ -1,12 +1,43 @@
 import React, { useEffect, useRef, useState } from "react";
 import profile from "../../assets/profile-user.png";
 import { useNavigate } from "react-router-dom";
+import { Modal, DatePicker, Select } from "antd";
 import { TbLogout } from "react-icons/tb";
 import { RiSettings3Fill } from "react-icons/ri";
+import { ChangePasswordInitValues, ChangePasswordSchema } from "../../Validation/changePasswordValidation";
+import { updatePassword } from "../../services/AdminServices";
+import { useFormik } from "formik";
 
 
 const NavBar = () => {
   const [showlog, setShowlog] = useState(false);
+  const forms = useFormik({
+    initialValues: ChangePasswordInitValues,
+    validationSchema: ChangePasswordSchema,
+    onSubmit: (values) => {
+      console.log(values)
+      submitForms(values);
+    },
+  });
+
+  const submitForms = async (values) => {
+    setLoader(true)
+    try {
+      let data = await updatePassword(values)
+      handleCancel()
+    } catch (error) {
+      if (error.response.status == 401) {
+        navigate('/')
+      }
+      messageApi.open({
+        type: 'error',
+        content: error.response.data.message,
+      });
+    } finally {
+      setLoader(false)
+    }
+  }
+
 
   const navigate = useNavigate();
 
@@ -17,6 +48,13 @@ const NavBar = () => {
   };
 
   const menuRef = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    forms.initialValues.oldPassword = "";
+    forms.initialValues.newPassword = "";
+    forms.initialValues.confirmPassword = "";
+  };
 
   useEffect(() => {
     let handler = (e) => {
@@ -30,7 +68,10 @@ const NavBar = () => {
       document.removeEventListener("mousedown", handler);
     };
   }, []);
-
+  const handleAddEvent = () => {
+    setIsModalOpen(true);
+    setShowlog(!showlog);
+  };
   const getName = localStorage.getItem("username")
 
   return (
@@ -58,9 +99,9 @@ bg-gray-50 z-20 border-b border-stone-200 "
                   {" "}
                   <span
                     className="flex flex-row items-center gap-2 cursor-pointer text-nav-ash px-2 py-1 font-md hover:rounded hover:duration-300  hover:bg-first hover:text-white"
-                    onClick={() => setShowlog(!showlog)}
+                    onClick={handleAddEvent}
                   >
-                   <RiSettings3Fill size={18} />Settings
+                    <RiSettings3Fill size={18} />Settings
                   </span>
                 </div>
 
@@ -70,7 +111,7 @@ bg-gray-50 z-20 border-b border-stone-200 "
                       hover:bg-first hover:text-white hover:rounded hover:duration-300 font-md"
                     onClick={logOut}
                   >
-                    <TbLogout size={18}/>
+                    <TbLogout size={18} />
                     <span>Log out</span>
                   </span>
                 </div>
@@ -79,7 +120,65 @@ bg-gray-50 z-20 border-b border-stone-200 "
           </>
         )}
       </div>
+      <Modal
+        title="Change Password"
+        open={isModalOpen}
+        onCancel={handleCancel}
+        footer={false}
+      >
+        <div className="w-full flex flex-col gap-3 items-center mt-10 h-fit">
+          <input
+            type="password"
+            placeholder="Current password"
+            className={`${forms.errors.oldPassword && forms.touched.oldPassword
+              ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              }`}
+            name="curentpassword"
+            id="curentpassword"
+            onBlur={forms.handleBlur}
+            value={forms.values.curentpassword}
+            onChange={forms.handleChange}
+          />
+          <input
+            type="password"
+            placeholder="New password"
+            className={`${forms.errors.newPassword && forms.touched.newPassword
+              ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              }`}
+            name="newPassword"
+            id="newPassword"
+            onBlur={forms.handleBlur}
+            value={forms.values.newPassword}
+            onChange={forms.handleChange}
+          />
+          <input
+            type="password"
+            placeholder="Host Name"
+            className={`${forms.errors.confirmPassword && forms.touched.confirmPassword
+              ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              }`}
+            name="confirmPassword"
+            id="confirmPassword"
+            onBlur={forms.handleBlur}
+            value={forms.values.confirmPassword}
+            onChange={forms.handleChange}
+          />
+        </div>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            onClick={forms.handleSubmit}
+            className="w-28 bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
+          >
+            Submit
+          </button>
+        </div>
+      </Modal>
     </div>
+
   );
 };
 

@@ -12,6 +12,10 @@ export const createEvents = async (data) => {
     return ApiResponse;
 }
 
+export const updatePassword = async (data) => {
+    let ApiResponse = await useAxiosInterceptors.post('admin/change/password', data)
+}
+
 
 export const getEvents = async () => {
     let ApiResponse = await useAxiosInterceptors.get("admin/get/events");
@@ -29,7 +33,7 @@ export const getPhotoGrapher = async () => {
 }
 
 export const EditeEvent = async (id, data) => {
-    const ApiResponse = await useAxiosInterceptors.put(`admin/update/Photographer/${id}`,data)
+    const ApiResponse = await useAxiosInterceptors.put(`admin/update/Photographer/${id}`, data)
     return ApiResponse
 }
 export const createAdmin = async (data) => {
@@ -79,7 +83,7 @@ export const getAllUsers = async () => {
 }
 
 export const updateEventOrganizer = async (id, data) => {
-    const ApiResponse = await useAxiosInterceptors.put(`admin/update/Photographer/${id}`,data)
+    const ApiResponse = await useAxiosInterceptors.put(`admin/update/Photographer/${id}`, data)
     return ApiResponse
 }
 
