@@ -134,8 +134,8 @@ bg-gray-50 z-20 border-b border-stone-200 "
               ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
               : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
               }`}
-            name="curentpassword"
-            id="curentpassword"
+            name="oldPassword"
+            id="oldPassword"
             onBlur={forms.handleBlur}
             value={forms.values.curentpassword}
             onChange={forms.handleChange}
