@@ -4,14 +4,15 @@ import { Link, useLocation } from "react-router-dom";
 import SidebarHeader from "./SidebarHeader";
 import event from "../../assets/event.png";
 import { FaCalendar, FaCalendarAlt, FaCalendarCheck, FaCalendarDay, FaCalendarTimes, FaCalendarWeek, FaRegCalendar, FaRegCalendarCheck, FaUser } from "react-icons/fa";
+import FaceSync from "./FaceSync";
 
 const Admin = () => {
   let location = useLocation();
   return (
-    <div className="w-full h-[100vh] bg-first">
+    <div className="w-full h-[100vh] bg-first font-[Inter]">
       <SidebarHeader />
 
-      <div className="border-t border-gray-500">
+      <div className="border-t border-gray-500 space-y-80">
         <ul className="flex flex-col gap-3 p-5">
           <Link to={"/home/manageevents"}>
             {" "}
@@ -52,6 +53,7 @@ const Admin = () => {
             </li>
           </Link> */}
         </ul>
+        <FaceSync/>
       </div>
     </div>
   );

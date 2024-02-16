@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { TbLogout } from "react-icons/tb";
 import { RiSettings3Fill } from "react-icons/ri";
 
+
 const NavBar = () => {
   const [showlog, setShowlog] = useState(false);
 
@@ -40,7 +41,7 @@ bg-gray-50 z-20 border-b border-stone-200 "
       <div className="flex items-center" ref={menuRef}>
         <img
           src={profile}
-          className="w-8 h-8 cursor-pointer"
+          className="w-8 h-8 cursor-pointer rounded-full"
           onClick={() => setShowlog(!showlog)}
         />
 

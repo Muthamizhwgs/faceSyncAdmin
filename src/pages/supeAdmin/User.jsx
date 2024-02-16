@@ -27,20 +27,20 @@ const User = () => {
 
   const columns = [
     {
-      name: <h1 className="text-lg text-gray-500">S.No</h1>,
+      name: <h1 className="text-base text-gray-600">S.No</h1>,
       selector: (row, ind) => ind + 1,
     },
     {
-      name: <h1 className="text-lg text-gray-500">Name</h1>,
-      selector: (row) => row.name,
+      name: <h1 className="text-base text-gray-600">Name</h1>,
+      selector: (row) => <p className="capitalize">{row.name}</p>,
     },
 
     {
-      name: <h1 className="text-lg text-gray-500">Mobile Number</h1>,
-      selector: (row) => row.contact,
+      name: <h1 className="text-base text-gray-600">Mobile Number</h1>,
+      selector: (row) => <p className="capitalize">{row.contact}</p>,
     },
     {
-      name: <h1 className="text-lg text-gray-500">Email Address</h1>,
+      name: <h1 className="text-base text-gray-600">Email Address</h1>,
       selector: (row) => row.email,
     },
   ];
@@ -56,7 +56,7 @@ const User = () => {
       style: {
         paddingLeft: "8px",
         paddingRight: "8px",
-        backgroundColor: "#F3F4F6",
+        backgroundColor: "#E5E7EB",
         color: "#6c737f",
         fontWeight: "bold",
       },
@@ -65,7 +65,7 @@ const User = () => {
       style: {
         paddingLeft: "8px",
         paddingRight: "8px",
-        fontSize: "16px",
+        fontSize: "14px",
         color: "#364353",
       },
     },
@@ -105,7 +105,7 @@ const User = () => {
           <input
             type="text"
             placeholder="Search users"
-            className="h-9 bg-gray-200 p-4 rounded-md"
+            className="h-9 bg-gray-200 p-4 rounded-md text-std"
             onChange={(event) => setSearchTerm(event.target.value)}
             value={searchTerm}
           />

@@ -6,7 +6,7 @@ export const ManageEventsSchema = Yup.object({
     eventLocation: Yup.string().required("Enter Event Location"),
     eventDate: Yup.string().required("Enter Event Date"),
     hostName:Yup.string().required("Enter host name"),
-    hostEmail:Yup.string().required("Enter host email"),
+    hostEmail:Yup.string().email().required("Enter host email"),
     hostWhatsappNumber:Yup.string().required("Enter whatsapp number"),
     assignPhotographer:Yup.string().required("Select photographer"),
       other: Yup.string().when('eventCategory', (value) => {
