@@ -52,6 +52,8 @@ function ManageEvents() {
   const [data, setData] = useState([]);
   const [eventDetails, setEventDetails] = useState([]);
 
+  const [getGuest, setGetGuest] = useState([]);
+
   // console.log(data);
 
   const handleAddEvent = () => {
@@ -82,13 +84,14 @@ function ManageEvents() {
   const getUsersByEvent = async (id) => {
     let getUserData = await getUsersByEventId(id);
     console.log(getUserData);
+    setGetGuest(getUserData.data);
   };
 
   const handleUploadIamge = (data) => {
     console.log(data);
     setId(data._id);
     setEventDetails([data]);
-    getUsersByEvent(data._id);
+    getUsersByEvent(data.folderName);
     setIsModalOpen3(true);
   };
 
@@ -296,7 +299,6 @@ function ManageEvents() {
       };
       let val = await updateEvent(data._id, adminStatus);
       console.log(val);
-    
     } catch (error) {
       console.log(error);
     } finally {
@@ -426,6 +428,26 @@ function ManageEvents() {
     },
   ];
 
+  const columns2 = [
+    {
+      name: <h1 className="text-base text-gray-600">S.No</h1>,
+      selector: (row, ind) => ind + 1,
+    },
+    {
+      name: <h1 className="text-base text-gray-600">Name</h1>,
+      selector: (row) => <p className="capitalize">{row.name}</p>,
+    },
+
+    {
+      name: <h1 className="text-base text-gray-600">Mobile Number</h1>,
+      selector: (row) => <p className="capitalize">{row.contact}</p>,
+    },
+    {
+      name: <h1 className="text-base text-gray-600">Email Address</h1>,
+      selector: (row) => row.email,
+    },
+  ];
+
   const customStyles = {
     rows: {
       style: {
@@ -525,7 +547,7 @@ function ManageEvents() {
                 className={`${
                   forms.errors.other && forms.touched.other
                     ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
-                    : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm" 
+                    : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
                 }`}
                 name="other"
                 id="other"
@@ -720,7 +742,10 @@ function ManageEvents() {
                     {id == 1 && (
                       <div className="w-full h-full flex">
                         {eventDetails?.map((d) => (
-                          <div className=" flex flex-col gap-5 my-5">
+                          <div
+                            className=" flex flex-col gap-5 my-5"
+                            key={d.eventName}
+                          >
                             <p className="text-sm text-gray-700 font-semibold font-[Inter]">
                               Event Name:{" "}
                               <span className="text-gray-500 font-medium">
@@ -871,7 +896,32 @@ function ManageEvents() {
                       </div>
                     )}
 
-                    {id == 3 && <div className="w-full text-lg">{}</div>}
+                    {id == 3 && (
+                      <div className="w-full text-lg mt-4">
+                        <div className="w-full h-20 flex justify-between items-baseline">
+                          <input
+                            type="text"
+                            placeholder="Search Events"
+                            className=" h-9 bg-gray-200 p-4 rounded-md text-sm"
+                            onChange={(event) =>
+                              setSearchTerm(event.target.value)
+                            }
+                            value={searchTerm}
+                          />
+                        
+                        </div>
+                        <DataTable
+                          columns={columns2}
+                          data={getGuest}
+                          fixedHeader
+                          pagination
+                          bordered
+                          customStyles={customStyles}
+                          pointerOnHover
+                          fixedHeaderScrollHeight="400px"
+                        />
+                      </div>
+                    )}
                   </TabPane>
                 );
               })}

@@ -12,7 +12,7 @@ const Admin = () => {
     <div className="w-full h-[100vh] bg-first font-[Inter]">
       <SidebarHeader />
 
-      <div className="border-t border-gray-500 space-y-80">
+      <div className="border-t border-gray-500 space-y-[320px]">
         <ul className="flex flex-col gap-3 p-5">
           <Link to={"/home/manageevents"}>
             {" "}
