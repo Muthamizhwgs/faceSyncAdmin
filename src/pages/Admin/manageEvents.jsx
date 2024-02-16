@@ -381,13 +381,9 @@ function ManageEvents() {
 
   const getFormattedDate = (date) => {
     const dateObject = new Date(date);
-
-    const formattedDate = dateObject.toLocaleString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-
+  
+    const formattedDate = `${('0' + dateObject.getDate()).slice(-2)}-${('0' + (dateObject.getMonth() + 1)).slice(-2)}-${dateObject.getFullYear()}`;
+  
     return formattedDate;
   };
 
@@ -773,7 +769,7 @@ function ManageEvents() {
                             <p className="text-sm text-gray-700 font-semibold font-[Inter]">
                               Assigned Photographer:{" "}
                               <span className="text-gray-500 font-medium">
-                                {d.assignPhotographer}
+                                {d.photographername}
                               </span>
                             </p>
                             <p className="text-sm text-gray-700 font-semibold font-[Inter]">
@@ -800,8 +796,8 @@ function ManageEvents() {
                     )}
                     {id == 2 && (
                       <>
-                        {eventDetails.map((d) => (
-                          <div className="w-full flex flex-col justify-center items-center gap-10 mt-5">
+                        {eventDetails.map((d, id) => (
+                          <div className="w-full flex flex-col justify-center items-center gap-10 mt-5" key={id}> 
                             <div className="w-[60%]">
                               <img
                                 src={d.qrURL}
@@ -903,10 +899,10 @@ function ManageEvents() {
                             type="text"
                             placeholder="Search Events"
                             className=" h-9 bg-gray-200 p-4 rounded-md text-sm"
-                            onChange={(event) =>
-                              setSearchTerm(event.target.value)
-                            }
-                            value={searchTerm}
+                            // onChange={(event) =>
+                            //   setSearchTerm(event.target.value)
+                            // }
+                            // value={searchTerm}
                           />
                         
                         </div>

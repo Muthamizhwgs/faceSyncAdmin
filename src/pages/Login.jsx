@@ -1,6 +1,6 @@
 import React from "react";
 import { message } from "antd";
-import EventImg from "../assets/event.jpg";
+import EventImg from "../assets/facesync.png";
 import { LoginInitValue, LoginSchema } from "../Validation/LoginValidation";
 import { useFormik } from "formik";
 import { LoginUsers } from "../services/AdminServices";
@@ -44,12 +44,12 @@ function Login() {
   return (
     <>
       {contextHolder}
-      <div className="w-full h-[100vh]  bg-[#cbc2f7] flex md:flex-row flex-col justify-between ">
+      <div className="w-full h-[100vh] bg-gradient-to-tl from-[#af2d73] via-[#510e6d] to-transparent flex md:flex-row flex-col justify-between ">
         <div className="md:w-[50%]">
           <img
             src={EventImg}
             alt="asd"
-            className="w-full h-full object-cover rounded-tr-2xl md:block hidden"
+            className="w-full h-full object-cover rounded-tr-2xl rounded-br-2xl md:block hidden"
           />
         </div>
         <div className="md:w-[50%] w-full h-full flex justify-center items-center">
@@ -88,7 +88,7 @@ function Login() {
                                         Password 
                                     </label> */}
                   <input
-                    type="text"
+                    type="password"
                     placeholder="Password"
                     name="password"
                     id="password"

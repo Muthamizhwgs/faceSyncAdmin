@@ -391,7 +391,7 @@ const Myevents = () => {
                             <p className="text-sm text-gray-700 font-semibold font-[Inter]">
                               Assigned Photographer:{" "}
                               <span className="text-gray-500 font-medium">
-                                {d.assignPhotographer}
+                                {d.photographername}
                               </span>
                             </p>
                             <p className="text-sm text-gray-700 font-semibold font-[Inter]">

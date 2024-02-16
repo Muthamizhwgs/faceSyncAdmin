@@ -124,7 +124,7 @@ function ManageAdminBySuperAdmin() {
     },
     {
       name: <h1 className="text-base text-gray-600">Email Address</h1>,
-      selector: (row) =><p className="capitalize">{row.email}</p>
+      selector: (row) =><p className="">{row.email}</p>
     },
     {
       name: <h1 className="text-base text-gray-600">Address</h1>,
