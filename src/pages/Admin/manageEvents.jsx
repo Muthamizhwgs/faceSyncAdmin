@@ -319,7 +319,7 @@ function ManageEvents() {
 
   const showConfirm = (data) => {
     confirm({
-      title: "Do you want to delete these events?",
+      title: "Do you want to delete this events?",
       icon: <ExclamationCircleFilled />,
       content: "",
       onOk() {
@@ -386,6 +386,32 @@ function ManageEvents() {
 
     setFilteredData(filteredResult);
   }, [events, searchTerm]);
+
+  const [filteredData2, setFilteredData2] = useState([]);
+
+  const [searchTerm2, setSearchTerm2] = useState("");
+
+  useEffect(() => {
+    const filterItem = (getGuest) => {
+      return Object.values(getGuest).some((value) => {
+        if (typeof value === "string") {
+          const lowerCaseValue = value.toString().toLowerCase();
+          return lowerCaseValue.includes(searchTerm2.toLowerCase());
+        } else if (value instanceof Date) {
+          const dateValue = value.toISOString().toLowerCase();
+          return dateValue.includes(searchTerm2.toLowerCase());
+        } else if (typeof value == "number") {
+          const stringValue = value.toString().toLowerCase();
+          return stringValue === searchTerm2.toLowerCase();
+        }
+        return false;
+      });
+    };
+
+    const filteredResult = getGuest.filter(filterItem);
+
+    setFilteredData2(filteredResult);
+  }, [getGuest, searchTerm2]);
 
   const getFormattedDate = (date) => {
     const dateObject = new Date(date);
@@ -909,16 +935,16 @@ function ManageEvents() {
                             type="text"
                             placeholder="Search Events"
                             className=" h-9 bg-gray-200 p-4 rounded-md text-sm"
-                            // onChange={(event) =>
-                            //   setSearchTerm(event.target.value)
-                            // }
-                            // value={searchTerm}
+                            onChange={(event) =>
+                              setSearchTerm2(event.target.value)
+                            }
+                            value={searchTerm2}
                           />
                         
                         </div>
                         <DataTable
                           columns={columns2}
-                          data={getGuest}
+                          data={filteredData2}
                           fixedHeader
                           pagination
                           bordered

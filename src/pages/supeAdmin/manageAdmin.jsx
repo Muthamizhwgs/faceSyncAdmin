@@ -208,7 +208,7 @@ function ManageAdminBySuperAdmin() {
 
   const showConfirm = (id) => {
     confirm({
-      title: "Do you Want to delete these items?",
+      title: "Do you Want to delete this organizer?",
       icon: <ExclamationCircleFilled />,
       content: "",
       onOk() {

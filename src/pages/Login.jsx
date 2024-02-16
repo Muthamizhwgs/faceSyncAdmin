@@ -53,7 +53,7 @@ function Login() {
           />
         </div>
         <div className="md:w-[50%] w-full h-full flex justify-center items-center">
-          <div className="w-[90%] px-5 py-10 bg-white rounded-xl flex flex-col ">
+          <div className="w-[90%] sm:w-[70%] px-5 pb-10 pt-5 bg-white rounded-xl flex flex-col gap-4">
             <div className="w-full ">
               <img
                 src={fs}

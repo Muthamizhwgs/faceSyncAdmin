@@ -142,7 +142,7 @@ const ManagePhotographer = () => {
 
   const showConfirm = (data) => {
     confirm({
-      title: "Do you want to delete these photographer?",
+      title: "Do you want to delete this photographer?",
       icon: <ExclamationCircleFilled />,
       content: "",
       onOk() {
