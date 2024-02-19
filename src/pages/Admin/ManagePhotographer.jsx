@@ -47,15 +47,25 @@ const ManagePhotographer = () => {
     try {
       let data = await CreatePhotoGrapher(values);
       console.log(data.data);
-      handleCancel();
+      if (data.data) {
+        messageApi.open({
+          type: "success",
+          content: "Photographer added successfully",
+        });
+        handleCancel();
+      }
     } catch (error) {
       if (error.response.status == 401) {
         navigate("/");
       }
-      messageApi.open({
-        type: "error",
-        content: error.response.data.message,
-      });
+      if (error.response.data.code == 400) {
+        console.log("trigger");
+        messageApi.open({
+          type: "error",
+          content: error.response.data.message,
+        });
+        handleCancel();
+      }
     } finally {
       setLoader(false);
       getPhotoGraphers();
@@ -161,7 +171,7 @@ const ManagePhotographer = () => {
     {
       name: <h1 className="text-base text-gray-600">S.No</h1>,
       selector: (row, ind) => ind + 1,
-      width:"80px"
+      width: "80px",
     },
     {
       name: <h1 className="text-base text-gray-600">Name</h1>,
@@ -177,7 +187,7 @@ const ManagePhotographer = () => {
     },
     {
       name: <h1 className="text-base text-gray-600">Actions</h1>,
-      width:"130px",
+      width: "130px",
       cell: (row) => (
         <div className="flex flex-row">
           <MdDelete

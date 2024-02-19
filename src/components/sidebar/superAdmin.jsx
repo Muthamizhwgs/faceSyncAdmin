@@ -25,7 +25,7 @@ const SuperAdmin = () => {
             hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
             >
               <img className="w-4 h-4" src={user}/>
-              Event Organizer
+              Event Organizers
             </li>
           </Link>
           <Link to={"/home/manage-photographer"}>
@@ -37,7 +37,7 @@ const SuperAdmin = () => {
               hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
             >
               <img src={pg} className="w-4 h-4" />
-              Photographer{" "}
+              Photographers{" "}
             </li>
           </Link>
           <Link to={"/home/users"}>
@@ -62,7 +62,7 @@ const SuperAdmin = () => {
                 } flex flex-row   items-center gap-2 p-2 text-white text-[14px] font-medium
             hover:bg-second hover:duration-200 rounded hover:ease-in-out`}
             >
-              <img src={leads} className="w-5 h-5"/>
+              <img src={leads} className="w-4 h-4"/>
               Leads
             </li>
           </Link>

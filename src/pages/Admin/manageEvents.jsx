@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Modal, Select } from "antd";
+import { Modal, Select, message } from "antd";
 import { useFormik } from "formik";
 import {
   ManageEventsSchema,
@@ -56,6 +56,7 @@ function ManageEvents() {
 
   const [data, setData] = useState([]);
   const [eventDetails, setEventDetails] = useState([]);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [getGuest, setGetGuest] = useState([]);
 
@@ -211,7 +212,9 @@ function ManageEvents() {
       console.log(error);
     } finally {
       setLoader(false);
+      window.location.reload();
     }
+    
   };
 
   const handleCancel = () => {
@@ -258,11 +261,22 @@ function ManageEvents() {
       console.log(finalData, "ssss");
       let val = await createEvents(finalData);
 
+
+      if(val.data){
+        messageApi.open({
+          type: "success",
+          content: 'Event added successfully',
+        });
+      }
+      
       MyEvents();
       handleCancel();
       forms.resetForm();
+     
     } catch (error) {
       console.log(error);
+    }finally{
+      window.location.reload();
     }
   };
 
@@ -450,7 +464,7 @@ function ManageEvents() {
     },
     {
       name: <h1 className="text-base  text-gray-600">Host Email Address</h1>,
-      selector: (row) => <p className="capitalize">{row.hostEmail}</p>,
+      selector: (row) => <p className="">{row.hostEmail}</p>,
       width: "250px",
     },
     {
@@ -524,10 +538,11 @@ function ManageEvents() {
     },
   };
 
- console.log(ManageEventsInitValue)
+//  console.log(ManageEventsInitValue)
 
   return (
     <>
+       {contextHolder}
       {loader ? <Loader date={loader} /> : null}
       <div className="w-full mx-auto font-[Inter]">
         <div className="w-full h-20 flex justify-between items-baseline">
@@ -823,7 +838,7 @@ function ManageEvents() {
           </div>
         </Modal>
 
-        <Modal
+        {/* <Modal
           title="Assign Photographer"
           open={isModalOpen2}
           onCancel={handleCancel2}
@@ -862,7 +877,7 @@ function ManageEvents() {
               </button>
             </div>
           </form>
-        </Modal>
+        </Modal> */}
 
         <Modal
           width={900}

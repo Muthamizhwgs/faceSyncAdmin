@@ -63,8 +63,23 @@ function ManageAdminBySuperAdmin() {
     try {
       let val = await createAdmin(values);
       console.log(val);
+      if (val.data) {
+        messageApi.open({
+          type: "success",
+          content: "Event organizer added successfully",
+        });
+      }
+      handleCancel();
     } catch (error) {
       console.log(error);
+      if (error.response.data.code == 400) {
+        console.log("trigger");
+        messageApi.open({
+          type: "error",
+          content: error.response.data.message,
+        });
+      }
+      handleCancel();
       if (error.response.status == 401) {
         navigate("/");
       }
@@ -151,7 +166,7 @@ function ManageAdminBySuperAdmin() {
       (ManageAdminInitValue.address = row.address),
       (ManageAdminInitValue.companyName = row.companyName),
       (ManageAdminInitValue.contact = row.contact),
-    setIsModalOpen(true);
+      setIsModalOpen(true);
     setId(row._id);
   }
 
@@ -240,114 +255,117 @@ function ManageAdminBySuperAdmin() {
   }, [datas, searchTerm]);
 
   return (
-    <div>
-      {loader ? <Loader data={loader} /> : null}
-      <div className="w-full h-20 flex sm:flex-row flex-col justify-between items-baseline">
-        <input
-          type="text"
-          placeholder="Search Organizer"
-          className="h-9 bg-gray-200 p-4 rounded-md text-std"
-          onChange={(event) => setSearchTerm(event.target.value)}
-          value={searchTerm}
-        />
-        <button
-          onClick={showModal}
-          className="px-2 py-1 text-std bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
-        >
-          {" "}
-          + Add Organizer
-        </button>
-      </div>
-      <Modal
-        title={editMode ? "Edit Event Organizer" : "Add Event Organizer"}
-        open={isModalOpen}
-        onCancel={handleCancel}
-        footer={false}
-      >
-        <div className="w-[90%] m-auto mt-10 flex flex-col items-center">
+    <>
+      {contextHolder}
+
+      <div>
+        {loader ? <Loader data={loader} /> : null}
+        <div className="w-full h-20 flex sm:flex-row flex-col justify-between items-baseline">
           <input
             type="text"
-            placeholder="Name"
-            className={`${
-              forms.errors.userName && forms.touched.userName
-                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-            }`}
-            name="userName"
-            id="userName"
-            onBlur={forms.handleBlur}
-            value={forms.values.userName}
-            onChange={forms.handleChange}
+            placeholder="Search Organizer"
+            className="h-9 bg-gray-200 p-4 rounded-md text-std"
+            onChange={(event) => setSearchTerm(event.target.value)}
+            value={searchTerm}
           />
-          <input
-            type="text"
-            placeholder="Email Address"
-            className={`${
-              forms.errors.email && forms.touched.email
-                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-            }`}
-            name="email"
-            id="email"
-            onBlur={forms.handleBlur}
-            value={forms.values.email}
-            onChange={forms.handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Company Name (optional)"
-            className={`${
-              forms.errors.companyName && forms.touched.companyName
-                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-            }`}
-            name="companyName"
-            id="companyName"
-            onBlur={forms.handleBlur}
-            value={forms.values.companyName}
-            onChange={forms.handleChange}
-          />
-          <input
-            type="number"
-            placeholder="Mobile Number"
-            className={`${
-              forms.errors.contact && forms.touched.contact
-                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-            }`}
-            name="contact"
-            id="contact"
-            onBlur={forms.handleBlur}
-            value={forms.values.contact}
-            onChange={forms.handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Address (optional)"
-            className={`${
-              forms.errors.address && forms.touched.address
-                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-            }`}
-            name="address"
-            id="addresss"
-            onBlur={forms.handleBlur}
-            value={forms.values.address}
-            onChange={forms.handleChange}
-          />
-        </div>
-        <div className="flex justify-center">
           <button
-            type="submit"
-            onClick={forms.handleSubmit}
-            className="w-28 bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
+            onClick={showModal}
+            className="px-2 py-1 text-std bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
           >
-            {editMode ? "Update" : "Submit"}
+            {" "}
+            + Add Organizer
           </button>
         </div>
-      </Modal>
+        <Modal
+          title={editMode ? "Edit Event Organizer" : "Add Event Organizer"}
+          open={isModalOpen}
+          onCancel={handleCancel}
+          footer={false}
+        >
+          <div className="w-[90%] m-auto mt-10 flex flex-col items-center">
+            <input
+              type="text"
+              placeholder="Name"
+              className={`${
+                forms.errors.userName && forms.touched.userName
+                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+                  : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              }`}
+              name="userName"
+              id="userName"
+              onBlur={forms.handleBlur}
+              value={forms.values.userName}
+              onChange={forms.handleChange}
+            />
+            <input
+              type="text"
+              placeholder="Email Address"
+              className={`${
+                forms.errors.email && forms.touched.email
+                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+                  : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              }`}
+              name="email"
+              id="email"
+              onBlur={forms.handleBlur}
+              value={forms.values.email}
+              onChange={forms.handleChange}
+            />
+            <input
+              type="text"
+              placeholder="Company Name (optional)"
+              className={`${
+                forms.errors.companyName && forms.touched.companyName
+                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+                  : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              }`}
+              name="companyName"
+              id="companyName"
+              onBlur={forms.handleBlur}
+              value={forms.values.companyName}
+              onChange={forms.handleChange}
+            />
+            <input
+              type="number"
+              placeholder="Mobile Number"
+              className={`${
+                forms.errors.contact && forms.touched.contact
+                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+                  : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              }`}
+              name="contact"
+              id="contact"
+              onBlur={forms.handleBlur}
+              value={forms.values.contact}
+              onChange={forms.handleChange}
+            />
+            <input
+              type="text"
+              placeholder="Address (optional)"
+              className={`${
+                forms.errors.address && forms.touched.address
+                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+                  : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              }`}
+              name="address"
+              id="addresss"
+              onBlur={forms.handleBlur}
+              value={forms.values.address}
+              onChange={forms.handleChange}
+            />
+          </div>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              onClick={forms.handleSubmit}
+              className="w-28 bg-first rounded-md text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
+            >
+              {editMode ? "Update" : "Submit"}
+            </button>
+          </div>
+        </Modal>
 
-      {/* <Modal
+        {/* <Modal
         title="Edit Event Organizer"
         open={rowOpen}
         onCancel={handleCancel2}
@@ -436,18 +454,19 @@ function ManageAdminBySuperAdmin() {
         </div>
       </Modal> */}
 
-      {datas && (
-        <DataTable
-          customStyles={customStyles}
-          columns={columns}
-          fixedHeader
-          pagination
-          data={filteredData}
-          bordered
-          fixedHeaderScrollHeight="340px"
-        />
-      )}
-    </div>
+        {datas && (
+          <DataTable
+            customStyles={customStyles}
+            columns={columns}
+            fixedHeader
+            pagination
+            data={filteredData}
+            bordered
+            fixedHeaderScrollHeight="340px"
+          />
+        )}
+      </div>
+    </>
   );
 }
 
