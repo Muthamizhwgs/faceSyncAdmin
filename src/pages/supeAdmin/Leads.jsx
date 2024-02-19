@@ -48,20 +48,17 @@ const Leads = () => {
       name: <h1 className="text-base  text-gray-600">Event Date</h1>,
       selector: (row) => getFormattedDate(row.eventDate),
     },
+    
     {
-      name: <h1 className="text-base  text-gray-600">Event Location</h1>,
-      selector: (row) => <p className="capitalize">{row.eventLocation}</p>,
-    },
-    {
-      name: <h1 className="text-base  text-gray-600">Event Location</h1>,
+      name: <h1 className="text-base  text-gray-600">Host Name</h1>,
       selector: (row) => <p className="capitalize">{row.hostName}</p>,
     },
     {
-      name: <h1 className="text-base  text-gray-600">Event Location</h1>,
-      selector: (row) => <p className="capitalize">{row.hostEmail}</p>,
+      name: <h1 className="text-base  text-gray-600">Host Email Address</h1>,
+      selector: (row) => <p className="">{row.hostEmail}</p>,
     },
     {
-      name: <h1 className="text-base  text-gray-600">Event Location</h1>,
+      name: <h1 className="text-base  text-gray-600">Host WhatsApp Number</h1>,
       selector: (row) => <p className="capitalize">{row.hostWhatsappNumber}</p>,
     },
   ];
