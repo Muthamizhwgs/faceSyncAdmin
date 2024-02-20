@@ -335,7 +335,7 @@ function ManageEvents() {
 
   const showConfirm = (data) => {
     confirm({
-      title: "Do you want to delete this events?",
+      title: "Do you want to delete this event?",
       icon: <ExclamationCircleFilled />,
       content: "",
       onOk() {

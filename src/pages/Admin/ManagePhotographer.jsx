@@ -263,7 +263,7 @@ const ManagePhotographer = () => {
         <div className="w-full h-20 flex sm:flex-row flex-col justify-between items-baseline">
           <input
             type="text"
-            placeholder="Search Photographer"
+            placeholder="Search photographers"
             className="h-9 bg-gray-200 p-4 rounded-md text-sm"
             onChange={(event) => setSearchTerm(event.target.value)}
             value={searchTerm}

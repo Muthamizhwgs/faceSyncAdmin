@@ -4,19 +4,21 @@ import { useNavigate } from "react-router-dom";
 import { Modal, DatePicker, Select, message } from "antd";
 import { TbLogout } from "react-icons/tb";
 import { RiSettings3Fill } from "react-icons/ri";
-import { ChangePasswordInitValues, ChangePasswordSchema } from "../../Validation/changePasswordValidation";
+import {
+  ChangePasswordInitValues,
+  ChangePasswordSchema,
+} from "../../Validation/changePasswordValidation";
 import { updatePassword } from "../../services/AdminServices";
 import { useFormik } from "formik";
 import Loader from "../../utils/loadder";
 
 const NavBar = () => {
-
   const [loader, setLoader] = useState(false);
   const forms = useFormik({
     initialValues: ChangePasswordInitValues,
     validationSchema: ChangePasswordSchema,
     onSubmit: (values) => {
-      console.log(values)
+      console.log(values);
       submitForms(values);
     },
   });
@@ -24,23 +26,30 @@ const NavBar = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const submitForms = async (values) => {
-    setLoader(true)
+    setLoader(true);
     try {
-      let data = await updatePassword(values)
-      handleCancel()
+      let data = await updatePassword(values);
+      if (data.data) {
+        messageApi.open({
+          type: "success",
+          content: "Password changed successfully",
+        });
+      }
+      handleCancel();
     } catch (error) {
       if (error.response.status == 401) {
-        navigate('/')
+        navigate("/");
       }
-      messageApi.open({
-        type: 'error',
-        content: error.response.data.message,
-      });
+      if (error.response.data.code === 400) {
+        messageApi.open({
+          type: "error",
+          content: "The current password entered is invalid.",
+        });
+      }
     } finally {
-      setLoader(false)
+      setLoader(false);
     }
-  }
-
+  };
 
   const navigate = useNavigate();
 
@@ -78,11 +87,12 @@ const NavBar = () => {
     setIsModalOpen(true);
     setShowlog(!showlog);
   };
-  const getName = localStorage.getItem("username")
+  const getName = localStorage.getItem("username");
 
   return (
     <>
       {loader ? <Loader date={loader} /> : null}
+      {contextHolder}
       <div
         className="w-full lg:w-4/5  h-16 flex flex-row justify-end px-4 fixed left-1/5 right-0 top-0
 bg-gray-50 z-20 border-b border-stone-200 "
@@ -99,7 +109,9 @@ bg-gray-50 z-20 border-b border-stone-200 "
               <div className="fixed top-20 right-4 h-fit w-[145px] bg-white flex flex-col rounded-lg shadow border border-gray-50">
                 <div className="flex flex-col p-3 gap-2">
                   <span className="font-semibold  text-gray-800">Account</span>
-                  <span className="text-nav-ash font-md capitalize">{getName}</span>
+                  <span className="text-nav-ash font-md capitalize">
+                    {getName}
+                  </span>
                 </div>
                 <div className="w-full h-px bg-gray-300"></div>
                 <div className="w-full flex flex-col p-2 gap-2">
@@ -109,7 +121,8 @@ bg-gray-50 z-20 border-b border-stone-200 "
                       className="flex flex-row items-center gap-2 cursor-pointer text-nav-ash px-2 py-1 font-md hover:rounded hover:duration-300  hover:bg-first hover:text-white"
                       onClick={handleAddEvent}
                     >
-                      <RiSettings3Fill size={18} />Settings
+                      <RiSettings3Fill size={18} />
+                      Settings
                     </span>
                   </div>
 
@@ -138,10 +151,11 @@ bg-gray-50 z-20 border-b border-stone-200 "
             <input
               type="password"
               placeholder="Current password"
-              className={`${forms.errors.oldPassword && forms.touched.oldPassword
-                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                }`}
+              className={`${
+                forms.errors.oldPassword && forms.touched.oldPassword
+                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+                  : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              }`}
               name="oldPassword"
               id="oldPassword"
               onBlur={forms.handleBlur}
@@ -151,10 +165,11 @@ bg-gray-50 z-20 border-b border-stone-200 "
             <input
               type="password"
               placeholder="New password"
-              className={`${forms.errors.newPassword && forms.touched.newPassword
-                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                }`}
+              className={`${
+                forms.errors.newPassword && forms.touched.newPassword
+                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+                  : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              }`}
               name="newPassword"
               id="newPassword"
               onBlur={forms.handleBlur}
@@ -164,10 +179,11 @@ bg-gray-50 z-20 border-b border-stone-200 "
             <input
               type="password"
               placeholder="Confirm new password"
-              className={`${forms.errors.confirmPassword && forms.touched.confirmPassword
-                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
-                }`}
+              className={`${
+                forms.errors.confirmPassword && forms.touched.confirmPassword
+                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+                  : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6"
+              }`}
               name="confirmPassword"
               id="confirmPassword"
               onBlur={forms.handleBlur}

@@ -127,7 +127,7 @@ function ManageAdminBySuperAdmin() {
     {
       name: <h1 className="text-base text-gray-600">Name</h1>,
       selector: (row) => <p className="capitalize">{row.userName}</p>,
-      width: "150px",
+      width: "200px",
     },
     {
       name: <h1 className="text-base text-gray-600">Mobile Number</h1>,
@@ -136,10 +136,6 @@ function ManageAdminBySuperAdmin() {
     {
       name: <h1 className="text-base text-gray-600">Email Address</h1>,
       selector: (row) => <p className="">{row.email}</p>,
-    },
-    {
-      name: <h1 className="text-base text-gray-600">Address</h1>,
-      selector: (row) => <p className="capitalize">{row.address}</p>,
     },
     {
       name: <h1 className="text-base text-gray-600">Actions</h1>,
@@ -175,6 +171,12 @@ function ManageAdminBySuperAdmin() {
       setLoader(true);
       let deletevalue = await AdminDeleteBySuperAdmin(id);
       console.log(deletevalue);
+      // if (error.response.data.code == 400) {
+      //   messageApi.open({
+      //     type: "success",
+      //     content: error.response.data.message,
+      //   });
+      // }
     } catch (error) {
       console.log(error);
     } finally {
@@ -213,7 +215,7 @@ function ManageAdminBySuperAdmin() {
 
   const showConfirm = (id) => {
     confirm({
-      title: "Do you Want to delete this organizer?",
+      title: "Do you want to delete this organizer?",
       icon: <ExclamationCircleFilled />,
       content: "",
       onOk() {
@@ -263,7 +265,7 @@ function ManageAdminBySuperAdmin() {
         <div className="w-full h-20 flex sm:flex-row flex-col justify-between items-baseline">
           <input
             type="text"
-            placeholder="Search Organizer"
+            placeholder="Search organizers"
             className="h-9 bg-gray-200 p-4 rounded-md text-std"
             onChange={(event) => setSearchTerm(event.target.value)}
             value={searchTerm}
@@ -277,7 +279,7 @@ function ManageAdminBySuperAdmin() {
           </button>
         </div>
         <Modal
-          title={editMode ? "Edit Event Organizer" : "Add Event Organizer"}
+          title={editMode ? "Edit event organizer" : "Add event organizer"}
           open={isModalOpen}
           onCancel={handleCancel}
           footer={false}

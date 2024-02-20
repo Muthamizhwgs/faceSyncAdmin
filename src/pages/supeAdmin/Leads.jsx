@@ -37,7 +37,7 @@ const Leads = () => {
     {
       name: <h1 className="text-base  text-gray-600">S.No</h1>,
       selector: (row, ind) => ind + 1,
-      width: "100px",
+      width: "70px",
     },
     {
       name: <h1 className="text-base  text-gray-600">Event Name</h1>,
@@ -47,6 +47,7 @@ const Leads = () => {
     {
       name: <h1 className="text-base  text-gray-600">Event Date</h1>,
       selector: (row) => getFormattedDate(row.eventDate),
+      width: "130px",
     },
     
     {
@@ -56,10 +57,12 @@ const Leads = () => {
     {
       name: <h1 className="text-base  text-gray-600">Host Email Address</h1>,
       selector: (row) => <p className="">{row.hostEmail}</p>,
+      width: "230px",
     },
     {
       name: <h1 className="text-base  text-gray-600">Host WhatsApp Number</h1>,
       selector: (row) => <p className="capitalize">{row.hostWhatsappNumber}</p>,
+      width: "250px",
     },
   ];
 
@@ -122,7 +125,7 @@ const Leads = () => {
         <div className="w-full h-20 flex sm:flex-row flex-col justify-between items-baseline">
           <input
             type="text"
-            placeholder="Search users"
+            placeholder="Search leads"
             className="h-9 bg-gray-200 p-4 rounded-md text-std"
             onChange={(event) => setSearchTerm(event.target.value)}
             value={searchTerm}
