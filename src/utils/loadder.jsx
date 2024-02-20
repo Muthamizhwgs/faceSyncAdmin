@@ -6,7 +6,7 @@ function Loader(data) {
     React.useEffect(() => { setLoader(data) }, [loader])
   return (
     <>{loader ?
-        <div className="loader-box" >
+        <div className="loader-box z-50" >
             <span className="loader"></span>
         </div> : null
     }</>

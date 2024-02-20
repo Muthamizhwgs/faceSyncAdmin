@@ -12,7 +12,6 @@ import { MdOutlineDateRange } from "react-icons/md";
 import { MdOutlineDescription } from "react-icons/md";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import moment from "moment";
-import Loader from "../../utils/loadder";
 import {
   createEvents,
   getEvents,
@@ -37,6 +36,7 @@ import { Tabs } from "antd";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Loader from "../../utils/loadder";
 const { TabPane } = Tabs;
 
 function ManageEvents() {
@@ -46,7 +46,6 @@ function ManageEvents() {
   const [selectedPictures, setSelectedPictures] = useState([]);
   const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
   const [savedPictures, setSavedPictures] = useState([]);
-  const [loader, setLoader] = useState(false);
   const [edit, setEdit] = useState(false);
   const [id, setId] = useState("");
   const fileInputRef = useRef(null);
@@ -57,6 +56,8 @@ function ManageEvents() {
   const [data, setData] = useState([]);
   const [eventDetails, setEventDetails] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
+  const [loader, setLoader] = useState(false);
+  const [buttonLoader, setButtonLoader] = useState(false);
 
   const [getGuest, setGetGuest] = useState([]);
 
@@ -103,6 +104,7 @@ function ManageEvents() {
 
   const handleSave = async (folderName) => {
     console.log(selectedPictures);
+    setButtonLoader(true);
     if (selectedPictures.length > 0) {
       try {
         const formData = new FormData();
@@ -116,6 +118,13 @@ function ManageEvents() {
 
         let datas = await UploadGroupPhotoes(formData);
         console.log(datas);
+        if (data) {
+          setButtonLoader(false);
+        }
+        messageApi.open({
+          type: "success",
+          content: "E-mail sent to guest!",
+        });
       } catch (error) {
         console.error(error);
       } finally {
@@ -139,7 +148,11 @@ function ManageEvents() {
       console.log(folderName);
       let val = await sendImages(folderName);
       console.log(val.data);
-    } catch (error) {}
+      messageApi.open({
+        type: "success",
+        content: "E-mail sent to host!",
+      });
+    } catch (error) { }
   };
 
   const handleDeleteImage = (index) => {
@@ -198,11 +211,11 @@ function ManageEvents() {
       const finalData =
         values.eventCategory === "Others"
           ? Object.fromEntries(
-              Object.entries(data).filter(([key]) => key !== "other")
-            )
+            Object.entries(data).filter(([key]) => key !== "other")
+          )
           : Object.fromEntries(
-              Object.entries(data).filter(([key]) => key !== "other")
-            );
+            Object.entries(data).filter(([key]) => key !== "other")
+          );
 
       let val = await updateEvent(id, finalData);
       console.log(val);
@@ -214,7 +227,7 @@ function ManageEvents() {
       setLoader(false);
       window.location.reload();
     }
-    
+
   };
 
   const handleCancel = () => {
@@ -252,30 +265,30 @@ function ManageEvents() {
       const finalData =
         values.eventCategory === "Others"
           ? Object.fromEntries(
-              Object.entries(data).filter(([key]) => key !== "other")
-            )
+            Object.entries(data).filter(([key]) => key !== "other")
+          )
           : Object.fromEntries(
-              Object.entries(data).filter(([key]) => key !== "other")
-            );
+            Object.entries(data).filter(([key]) => key !== "other")
+          );
 
       console.log(finalData, "ssss");
       let val = await createEvents(finalData);
 
 
-      if(val.data){
+      if (val.data) {
         messageApi.open({
           type: "success",
           content: 'Event added successfully',
         });
       }
-      
+
       MyEvents();
       handleCancel();
       forms.resetForm();
-     
+
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       window.location.reload();
     }
   };
@@ -288,7 +301,7 @@ function ManageEvents() {
       MyEvents();
       handleCancel2();
       forms2.resetForm();
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const MyEvents = async () => {
@@ -538,11 +551,11 @@ function ManageEvents() {
     },
   };
 
-//  console.log(ManageEventsInitValue)
+  //  console.log(ManageEventsInitValue)
 
   return (
     <>
-       {contextHolder}
+      {contextHolder}
       {loader ? <Loader date={loader} /> : null}
       <div className="w-full mx-auto font-[Inter]">
         <div className="w-full h-20 flex justify-between items-baseline">
@@ -611,11 +624,10 @@ function ManageEvents() {
               <input
                 type="text"
                 placeholder="Enter the event"
-                className={`${
-                  forms.errors.other && forms.touched.other
-                    ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
-                    : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
-                }`}
+                className={`${forms.errors.other && forms.touched.other
+                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
+                  : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
+                  }`}
                 name="other"
                 id="other"
                 onBlur={forms.handleBlur}
@@ -627,11 +639,10 @@ function ManageEvents() {
             <input
               type="text"
               placeholder="Event Name"
-              className={`${
-                forms.errors.eventName && forms.touched.eventName
-                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
-                  : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
-              }`}
+              className={`${forms.errors.eventName && forms.touched.eventName
+                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
+                : "w-[90%]  rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
+                }`}
               name="eventName"
               id="eventName"
               onBlur={forms.handleBlur}
@@ -641,11 +652,10 @@ function ManageEvents() {
             <input
               type="text"
               placeholder="Event Location"
-              className={`${
-                forms.errors.eventLocation && forms.touched.eventLocation
-                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
-                  : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
-              }`}
+              className={`${forms.errors.eventLocation && forms.touched.eventLocation
+                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
+                : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
+                }`}
               name="eventLocation"
               id="eventLocation"
               onBlur={forms.handleBlur}
@@ -729,12 +739,11 @@ function ManageEvents() {
                   name="eventDate"
                   placeholder="Event date"
                   id="eventDate"
-                  
-                  className={`${
-                    forms.errors.eventDate
-                      ? "border-red-500"
-                      : ""
-                  } `}
+
+                  className={`${forms.errors.eventDate
+                    ? "border-red-500"
+                    : ""
+                    } `}
                   value={
                     forms.values.eventDate ? moment(forms.values.eventDate) : null
                   }
@@ -766,11 +775,10 @@ function ManageEvents() {
             <input
               type="text"
               placeholder="Host Name"
-              className={`${
-                forms.errors.hostName && forms.touched.hostName
-                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
-                  : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
-              }`}
+              className={`${forms.errors.hostName && forms.touched.hostName
+                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
+                : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
+                }`}
               name="hostName"
               id="hostName"
               onBlur={forms.handleBlur}
@@ -780,11 +788,10 @@ function ManageEvents() {
             <input
               type="email"
               placeholder="Host Email"
-              className={`${
-                forms.errors.hostEmail && forms.touched.hostEmail
-                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
-                  : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
-              }`}
+              className={`${forms.errors.hostEmail && forms.touched.hostEmail
+                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
+                : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-6 text-sm"
+                }`}
               name="hostEmail"
               id="hostEmail"
               onBlur={forms.handleBlur}
@@ -794,12 +801,11 @@ function ManageEvents() {
             <input
               type="number"
               placeholder="Host WhatsApp Number"
-              className={`${
-                forms.errors.hostWhatsappNumber &&
+              className={`${forms.errors.hostWhatsappNumber &&
                 forms.touched.hostWhatsappNumber
-                  ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-3 text-sm"
-                  : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-3 text-sm"
-              }`}
+                ? "border-red-500 w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-3 text-sm"
+                : "w-[90%] rounded-md p-2 -mt-3 border-2 bg-gray-200 mb-3 text-sm"
+                }`}
               name="hostWhatsappNumber"
               id="hostWhatsappNumber"
               onBlur={forms.handleBlur}
@@ -880,6 +886,7 @@ function ManageEvents() {
         </Modal> */}
 
         <Modal
+          zIndex={40}
           width={900}
           title={`${eventDetails[0]?.eventName}`}
           open={isModalOpen3}
@@ -1017,9 +1024,11 @@ function ManageEvents() {
                               onClick={() =>
                                 handleSave(eventDetails[0]?.folderName)
                               }
-                              className="w-32 bg-first rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
+                              className="w-40 bg-first flex justify-center items-center gap-4 rounded text-white h-9 hover:bg-second duration-200 shadow-sm shadow-first hover:shadow-second"
                             >
-                              Share to guest
+                              Share to guest    {buttonLoader && (
+                                <span className="loading loading-spinner text-white"></span>
+                              )}
                             </button>
                             <button
                               onClick={() =>
@@ -1032,11 +1041,10 @@ function ManageEvents() {
                           </div>
                         </div>
                         <div
-                          className={`grid grid-cols-4 place-items-center gap-4  p-4 ${
-                            savedPictures.length > 0
-                              ? "border-2 border-dashed"
-                              : ""
-                          }`}
+                          className={`grid grid-cols-4 place-items-center gap-4  p-4 ${savedPictures.length > 0
+                            ? "border-2 border-dashed"
+                            : ""
+                            }`}
                         >
                           {savedPictures.map((picture, index) => (
                             <div
