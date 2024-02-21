@@ -52,8 +52,8 @@ const ManagePhotographer = () => {
           type: "success",
           content: "Photographer added successfully",
         });
-        handleCancel();
       }
+      handleCancel();
     } catch (error) {
       if (error.response.status == 401) {
         navigate("/");
@@ -190,13 +190,13 @@ const ManagePhotographer = () => {
       width: "130px",
       cell: (row) => (
         <div className="flex flex-row">
-          <MdDelete
-            className="w-10 h-6 cursor-pointer text-red-500"
-            onClick={() => showConfirm(row._id)}
-          />
           <FaEdit
             className="w-8 h-5 cursor-pointer text-blue-500"
             onClick={() => handleUpdate(row)}
+          />
+          <MdDelete
+            className="w-10 h-6 cursor-pointer text-red-500"
+            onClick={() => showConfirm(row._id)}
           />
         </div>
       ),

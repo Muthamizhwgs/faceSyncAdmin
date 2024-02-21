@@ -5,12 +5,12 @@ import { LoginInitValue, LoginSchema } from "../Validation/LoginValidation";
 import { useFormik } from "formik";
 import { LoginUsers } from "../services/AdminServices";
 import { useNavigate } from "react-router-dom";
-import Home from "./Home";
 import fs from "../assets/logofs.jpg";
 
 function Login() {
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
+  
   const forms = useFormik({
     initialValues: LoginInitValue,
     validationSchema: LoginSchema,
@@ -28,10 +28,22 @@ function Login() {
 
       if (val.data.data.role === "superAdmin") {
         navigate("/home/manageAdmin");
+        messageApi.open({
+          type: "success",
+          content: "Login successful.",
+        });
       } else if (val.data.data.role === "admin") {
         navigate("/home/manageevents");
+        messageApi.open({
+          type: "success",
+          content: "Login successful.",
+        });
       } else if (val.data.data.role === "photographer") {
         navigate("/home/manageMyevents");
+        messageApi.open({
+          type: "success",
+          content: "Login successful.",
+        });
       }
     } catch (error) {
       messageApi.open({
@@ -72,9 +84,9 @@ function Login() {
                     placeholder="Email Address"
                     className={
                       forms.errors.userName && forms.touched.userName
-                        ? "w-full bg-sky-50 h-14 pl-4 rounded border-red-600 border-2"
-                        : "bg-sky-50 h-14 pl-4 rounded border-2"
-                    }   
+                        ? "w-full bg-gray-50 h-14 pl-4 rounded border-red-600 border-2"
+                        : "bg-gray-50 h-14 pl-4 rounded border-2"
+                    }
                     name="userName"
                     id="userName"
                     onBlur={forms.handleBlur}
@@ -94,8 +106,8 @@ function Login() {
                     id="password"
                     className={
                       forms.errors.password && forms.touched.password
-                        ? "w-full h-14 pl-4 rounded border-red-600 border-2"
-                        : "bg-sky-50 h-14 pl-4 rounded border-2"
+                        ? "w-full h-14 pl-4 rounded border-red-600 border-2 bg-gray-50"
+                        : "bg-gray-50 h-14 pl-4 rounded border-2"
                     }
                     onBlur={forms.handleBlur}
                     value={forms.values.password}

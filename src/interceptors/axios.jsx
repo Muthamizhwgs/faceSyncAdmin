@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const apiInstance = axios.create({
-  // baseURL: "http://localhost:3001/v1/",
-  baseURL: "https://api.facesync.app/v1/",
+  baseURL: "http://localhost:3001/v1/",
+  // baseURL: "https://api.facesync.app/v1/",
 
 });
 
